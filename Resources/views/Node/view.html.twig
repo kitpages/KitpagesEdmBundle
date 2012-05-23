@@ -1,0 +1,19 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+
+<div>
+<h2>{{ "File detail" | trans }}</h2>
+    {{node.label}}
+    <div>
+        <h3>{{ "Description" | trans }}</h3>
+        {{node.comment}}
+    </div>
+    <div>
+        <h3>{{ "Information" | trans }}</h3>
+        <ul>
+            <li>{{ "Size" | trans }} : {{node.file.data.size // 1024 }} Ko</li>
+            <li>{{ "Date of latest version" | trans }} : {{node.file.updatedAt|date("d-m-Y")}}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

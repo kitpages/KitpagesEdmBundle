@@ -1,0 +1,38 @@
+    <ul class="kit-cms-tree-node-container">
+        {% for kitEdmNode in nodeChildren %}
+            <li class="kit-cms-tree-node ">
+                <div class="kit-cms-tree-line">
+                    {% if kitEdmNode.url is defined %}
+                        <a href="{{kitEdmNode.url}}">
+                    {% endif %}
+                        <span class="kit-cms-tree-page-id kit-cms-advanced">[{{kitEdmNode.id}}]</span>
+                        <span class="kit-cms-tree-page-title">{{kitEdmNode.label|raw}}</span>
+                    {% if kitEdmNode.url is defined %}
+                        </a>
+                    {% endif %}
+                    <ul class="kit-cms-tree-actions kit-cms-menu">
+                    {% for kitEdmNodeAction in kitEdmNode.actionList %}
+                        <li class="{{kitEdmNodeAction.class|default()}}" >
+                        {% if kitEdmNodeAction.dataPopup is defined %}
+                            <a href="#" rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}" class="poplight" title="{{kitEdmNodeAction.label}}">
+                        {% else %}
+                            <a href="{{kitEdmNodeAction.url}}" title="{{kitEdmNodeAction.label}}">
+                        {% endif %}
+                        {% if kitEdmNodeAction.icon is defined %}
+                            <img src="{{asset("bundles/kitpagesedm/" ~ kitEdmNodeAction.icon)}}">
+                        {% else %}
+                            {{kitEdmNodeAction.label}}
+                        {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                    <div style="clear:both"></div>
+                </div>
+                <div style="clear:both" ></div>
+                <div class="kit-cms-tree-state-node">
+                    {% include 'KitpagesEdmBundle:Tree:nodeChildren.html.twig' with {'nodeChildren': kitEdmNode.children } %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>

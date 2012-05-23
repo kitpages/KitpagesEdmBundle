@@ -5,28 +5,28 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\EdmBundle\Entity\Item" repository-class="Kitpages\EdmBundle\Repository\ItemRepository" table="kit_edm_item">
+    <entity name="Kitpages\EdmBundle\Entity\Node" repository-class="Kitpages\EdmBundle\Repository\NodeRepository" table="kit_edm_node">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>
 
-        <field name="slug" column="slug" type="string" unique="true" nullable="false" length="250"/>
-        <field name="language" column="language" type="string" nullable="true" length="250"/>
-        <field name="title" column="title" type="string" nullable="true" length="250" />
-        <field name="urlTitle" column="url_title" type="string" nullable="true" length="250" />
-        <field name="forcedUrl" column="forced_url" type="string" nullable="true" length="250" unique="true"/>
-        <field name="menuTitle" column="menu_title" type="string" nullable="true" length="250" />
-        <field name="pageType" column="page_type" type="string" length="100" />
-        <field name="layout" column="layout" type="string" length="250"  nullable="true" />
+        <field name="treeId" column="treeId" type="string" length="50" />
 
-        <field name="isPublished" column="is_published" type="boolean"/>
-        <field name="isInNavigation" column="is_in_navigation" type="boolean"/>
-        <field name="isLinkUrlFirstChild" column="is_link_url_first_child" type="boolean" nullable="true" />
-        <field name="isPendingDelete" column="is_pending_delete" type="boolean"/>
+        <field name="userId" column="user_id" type="integer" nullable="true" />
+        <field name="userName" column="user_name" type="string" length="250" nullable="true" />
+        <field name="userEmail" column="user_email" type="string" length="250" nullable="true" />
+        <field name="userIp" column="user_ip" type="string" length="50" nullable="true" />
+
+
+        <field name="label" column="label" type="string"  nullable="true" length="250"/>
+
+        <field name="title" column="title" type="string"  nullable="true" length="250"/>
+        <field name="comment" column="comment" type="text"  nullable="true" />
+
+        <field name="nodeType" column="node_type" type="string" length="100" />
+
         <field name="data" column="data" type="array" nullable="true" />
-
-        <field name="linkUrl" column="link_url" type="string" nullable="true" />
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
@@ -48,12 +48,12 @@
             <gedmo:tree-level/>
         </field>
 
-        <many-to-one field="parent" target-entity="Page">
+        <many-to-one field="parent" target-entity="Node">
             <join-column name="parent_id" referenced-column-name="id" on-delete="SET NULL"/>
             <gedmo:tree-parent/>
         </many-to-one>
 
-        <one-to-one field="file" target-entity="Kitpages\EdmBundle\Entity\File" inversed-by="item" nullable="true" >
+        <one-to-one field="file" target-entity="Kitpages\EdmBundle\Entity\File" inversed-by="node" nullable="true" >
             <join-columns>
                 <join-column name="file_id" referenced-column-name="id" nullable="true" on-delete="SET NULL" on-update="CASCADE" />
             </join-columns>

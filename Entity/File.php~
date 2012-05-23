@@ -348,29 +348,4 @@ class File {
         return $this->previousVersion;
     }
 
-    /**
-     * @var Kitpages\EdmBundle\Entity\File
-     */
-    private $originalVersion;
-
-
-    /**
-     * Set originalVersion
-     *
-     * @param Kitpages\EdmBundle\Entity\File $originalVersion
-     */
-    public function setOriginalVersion(\Kitpages\EdmBundle\Entity\File $originalVersion)
-    {
-        $this->originalVersion = $originalVersion;
-    }
-
-    /**
-     * Get originalVersion
-     *
-     * @return Kitpages\EdmBundle\Entity\File 
-     */
-    public function getOriginalVersion()
-    {
-        return $this->originalVersion;
-    }
 }

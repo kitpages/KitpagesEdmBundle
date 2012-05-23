@@ -1,0 +1,23 @@
+#kitpages_edm_add_directory:
+#    pattern:  /addDirectory/{parentNodeId}
+#    defaults: { _controller: KitpagesEdmBundle:Node:addDirectory }
+#    requirements:
+#        parentNodeId: \d+
+
+kitpages_edm_add_directory:
+    pattern:  /addDirectory
+    defaults: { _controller: KitpagesEdmBundle:Node:addDirectory }
+
+kitpages_edm_add_file:
+    pattern:  /addFile
+    defaults: { _controller: KitpagesEdmBundle:Node:addFile }
+
+kitpages_edm_add_file_version:
+    pattern:  /addFileVersion
+    defaults: { _controller: KitpagesEdmBundle:Node:addFileVersion }
+
+kitpages_edm_view_node:
+    pattern:  /node/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:view }
+    requirements:
+        nodeId: \d+
