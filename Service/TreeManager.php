@@ -26,6 +26,7 @@ class TreeManager {
     protected $dispatcher = null;
     protected $router = null;
     protected $treeId = null;
+    protected $actionList = array();
 
     public function __construct(
         Registry $doctrine,
@@ -52,6 +53,16 @@ class TreeManager {
         $this->rootTree = $root;
     }
 
+    public function setActionList($actionList)
+    {
+        $this->actionList = $actionList;
+    }
+
+    public function getRoot()
+    {
+        return $this->rootTree;
+    }
+
     private function createTree()
     {
         $nodeRoot = new Node();
@@ -63,6 +74,28 @@ class TreeManager {
         $em->persist($nodeRoot);
         $em->flush();
         return $nodeRoot;
+    }
+
+    public function createNodeDirectoryChildOfRoot(array $parameterList)
+    {
+        return $this->createNodeDirectoryChild($this->rootTree, $parameterList);
+    }
+
+    public function createNodeDirectoryChild($nodeParent, array $parameterList)
+    {
+        $node = new Node();
+        $node->setTreeId($this->treeId);
+        foreach($parameterList as $parameter => $value) {
+            $method = 'set'.ucfirst($parameter);
+            $node->$method($value);
+        }
+        $node->setParent($nodeParent);
+        $node->setNodeType(Node::NODE_TYPE_DIRECTORY);
+
+        $em = $this->doctrine->getEntityManager();
+        $em->persist($node);
+        $em->flush();
+        return $node;
     }
 
     public function uploadFile(Node $node, UploadedFile $uploadedFile, $sendEmail, $versionNote = null)
@@ -118,6 +151,122 @@ class TreeManager {
         }
 
     }
+
+    public function nodeChildren($nodeParent)
+    {
+        $em = $this->doctrine->getEntityManager();
+
+        $nodeList = $em->getRepository('KitpagesEdmBundle:Node')->children($nodeParent, true);
+
+        $nodeListRenderer = array();
+
+        foreach($nodeList as $node) {
+            $event = new TreeEvent();
+            $event->setNode($nodeParent);
+            $this->getDispatcher()->dispatch(KitpagesEdmEvents::onDisplayNodeInTree, $event);
+            if (!$event->isDefaultPrevented()) {
+
+                $nodeTree = array();
+                $nodeTree['id'] = $node->getId();
+                $nodeTree['label'] = $node->getLabel();
+                $nodeTree['nodeType'] =  $node->getNodeType();
+
+                if ($node->getNodeType() == Node::NODE_TYPE_DIRECTORY) {
+                    $nodeTree['actionList'][] = array(
+                        'id' => '',
+                        'label' => 'add directory',
+                        'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
+                        'dataPopup' => array(
+                            'fieldName' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
+                            'fieldValue'=> $node->getId(),
+                            'rel' => "kitpages_edmbundle_nodedirectoryform"
+                        )
+                    );
+                    $nodeTree['actionList'][] = array(
+                        'id' => '',
+                        'label' => 'add file',
+                        'icon' => 'bundles/kitpagesedm/icon/add-file.png',
+                        'dataPopup' => array(
+                            'fieldName' => 'kitpages_edmbundle_nodefileform_parent_id',
+                            'fieldValue'=> $node->getId(),
+                            'rel' => "kitpages_edmbundle_nodefileform"
+                        )
+                    );
+                    if (isset($this->actionList[Node::NODE_TYPE_DIRECTORY])) {
+                        foreach($this->actionList[Node::NODE_TYPE_DIRECTORY] as $action) {
+                            $nodeTree['actionList'][] = $this->parseAction($action, $node);
+                        }
+                    }
+                } elseif ($node->getNodeType() == Node::NODE_TYPE_FILE) {
+                    $nodeTree['url'] = $this->router->generate(
+                        'kitpages_edm_view_node',
+                        array(
+                            'nodeId' => $node->getId()
+                        )
+                    );
+                    $nodeTree['actionList'][] = array(
+                        'id' => '',
+                        'label' => 'add version',
+                        'icon' => 'bundles/kitpagesedm/icon/add-file-version.png',
+                        'dataPopup' => array(
+                            'fieldName' => 'kitpages_edmbundle_nodefileversionform_node_id',
+                            'fieldValue'=> $node->getId(),
+                            'rel' => "kitpages_edmbundle_nodefileversionform"
+                        )
+                    );
+                    if (isset($this->actionList[Node::NODE_TYPE_FILE])) {
+                        foreach($this->actionList[Node::NODE_TYPE_FILE] as $action) {
+                            $nodeTree['actionList'][] = $this->parseAction($action, $node);
+                        }
+                    }
+                }
+
+            }
+            $event->set("nodeTree", $nodeTree);
+            $this->getDispatcher()->dispatch(KitpagesEdmEvents::afterDisplayNodeInTree, $event);
+            $nodeTree = $event->get("nodeTree");
+            $nodeTree['children'] = $this->nodeChildren($node);
+            $nodeListRenderer[] = $nodeTree;
+
+        }
+
+        return $nodeListRenderer;
+    }
+
+    public function parseAction(array $action, $node)
+    {
+        if (isset($action['route'])) {
+            foreach($action['route']['parameterList'] as $parameter => $parameterValue) {
+                $findMethod = preg_match(
+                    '/\$\$([a-zA-Z0-9_\.]+)\$\$/',
+                    $parameterValue,
+                    $matches
+                );
+                if ($findMethod) {
+                    $method = $matches[1];
+                    $action['route']['parameterList'][$parameter] = $node->$method();
+                }
+            }
+            $action['url'] = $this->router->generate(
+                $action['route']['name'],
+                $action['route']['parameterList']
+            );
+        } elseif (isset($action['url'])) {
+            $findMethod = preg_match_all(
+                '/\$\$([a-zA-Z0-9_\.]+)\$\$/',
+                $action['url'],
+                $matches
+            );
+            if ($findMethod > 0) {
+                echo var_dump($matches);
+                foreach($matches[1] as $key => $method) {
+                   $action['url'] = str_replace($matches[0][$key], $node->$method(), $action['url']);
+                }
+            }
+        }
+        return $action;
+    }
+
 
 
 

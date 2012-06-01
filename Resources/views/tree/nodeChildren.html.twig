@@ -19,7 +19,7 @@
                             <a href="{{kitEdmNodeAction.url}}" title="{{kitEdmNodeAction.label}}">
                         {% endif %}
                         {% if kitEdmNodeAction.icon is defined %}
-                            <img src="{{asset("bundles/kitpagesedm/" ~ kitEdmNodeAction.icon)}}">
+                            <img src="{{asset(kitEdmNodeAction.icon)}}">
                         {% else %}
                             {{kitEdmNodeAction.label}}
                         {% endif %}

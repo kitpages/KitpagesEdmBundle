@@ -4,6 +4,8 @@ namespace Kitpages\EdmBundle\Repository;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Doctrine\ORM\EntityRepository;
+use Kitpages\EdmBundle\Entity\Node;
+use Kitpages\EdmBundle\EdmException;
 
 /**
  * ItemRepository
@@ -26,6 +28,29 @@ class NodeRepository extends NestedTreeRepository
             ->AndWhere(" node.treeId = :treeId")
             ->setParameter("treeId", $treeId);
 
+    }
+
+    public function getFirstDirectoryNodeParentByNode($node)
+    {
+        $node = $this->_em
+            ->createQuery("
+                SELECT n
+                FROM KitpagesEdmBundle:Node n
+                WHERE n.right > :right
+                  AND n.left < :left
+                  AND n.nodeType = :nodeType
+                ORDER BY n.left
+              ")
+            ->setParameter("right", $node->getRight())
+            ->setParameter("left", $node->getLeft())
+            ->setParameter("nodeType", Node::NODE_TYPE_DIRECTORY)
+            ->setMaxResults(1)
+            ->getResult();
+        if (count($node) > 0) {
+            return $node[0];
+        } else {
+            throw new EdmException("No parent directory");
+        }
     }
 
 }

@@ -8,6 +8,7 @@
         <h3>{{ "Description" | trans }}</h3>
         {{node.comment}}
     </div>
+    {% if node.file != null %}
     <div>
         <h3>{{ "Information" | trans }}</h3>
         <ul>
@@ -15,5 +16,6 @@
             <li>{{ "Date of latest version" | trans }} : {{node.file.updatedAt|date("d-m-Y")}}</li>
         </ul>
     </div>
+    {% endif%}
 </div>
 {% endblock %}
