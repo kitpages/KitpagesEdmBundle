@@ -41,6 +41,11 @@ AppKernel.php
             new Kitpages\EdmBundle\KitpagesEdmBundle(),
         );
 
+app/config/routing.yml
+    KitpagesEdmBundle:
+        resource: "@KitpagesEdmBundle/Resources/config/routing.yml"
+        prefix:   /
+
 Configuration example
 =====================
 The following configuration defines 2 filesystems :
@@ -56,15 +61,6 @@ Let's see the configuration in config.yml
             client:
                 kitpages_file_system_id: kitpagesAmazon
 
-
-# app/config/security.yml
-Edm use the Acl
-    security:
-        acl:
-            connection: default
-
-execute
-    php app/console init:acl
 
 Usage example
 =============
