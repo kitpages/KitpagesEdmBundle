@@ -28,6 +28,16 @@ class TreeManager {
     protected $treeId = null;
     protected $actionList = array();
 
+    CONST TYPE_ACTION_ADD_DIRECTORY = "addDirectory";
+    CONST TYPE_ACTION_ADD_FILE = "addFile";
+    CONST TYPE_ACTION_ADD_FILE_VERSION = "addFileVersion";
+    CONST TYPE_ACTION_DISABLE_FILE = "disableFile";
+    CONST TYPE_ACTION_DISABLE_DIRECTORY = "disableDirectory";
+    CONST TYPE_ACTION_RETRIEVE_DIRECTORY = "retrieveDirectory";
+    CONST TYPE_ACTION_RETRIEVE_FILE = "retrieveFile";
+    CONST TYPE_ACTION_DELETE_DIRECTORY = "deleteDirectory";
+    CONST TYPE_ACTION_DELETE_FILE = "deleteFile";
+
     public function __construct(
         Registry $doctrine,
         EventDispatcherInterface $dispatcher,
@@ -152,7 +162,167 @@ class TreeManager {
 
     }
 
-    public function nodeChildren($nodeParent)
+    public function nodeInTree($node, $statusParent, $kitpages_target = null)
+    {
+        $event = new TreeEvent();
+        $event->setNode($node);
+        $this->dispatcher->dispatch(KitpagesEdmEvents::onDisplayNodeInTree, $event);
+        if (!$event->isDefaultPrevented()) {
+
+            $nodeTree = array();
+            $nodeTree['id'] = $node->getId();
+            $nodeTree['label'] = $node->getLabel();
+            $nodeTree['nodeType'] =  $node->getNodeType();
+            $nodeStatus = $node->getStatus();
+            if ($nodeStatus != null) {
+                $nodeTree['class'] =  'kitpages-edm-node-status-'.$node->getStatus();
+            }
+
+            if ($node->getNodeType() == Node::NODE_TYPE_FILE) {
+                $nodeTree['url'] = $this->router->generate(
+                    'kitpages_edm_view_node',
+                    array(
+                        'nodeId' => $node->getId()
+                    )
+                );
+            }
+            // actionList
+            $nodeTree['actionList'] = array();
+            if ($statusParent !=  Node::NODE_STATUS_DISABLE) {
+                if ($node->getNodeType() == Node::NODE_TYPE_DIRECTORY) {
+                    if($nodeStatus == Node::NODE_STATUS_DISABLE ) {
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_RETRIEVE_DIRECTORY,
+                            'label' => 'undelete directory',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_retrieve_node',
+                                array(
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
+                                )
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_DELETE_DIRECTORY,
+                            'label' => 'delete directory '.$node->getLabel().' definitely!',
+                            'classLink' => 'kit-edm-delete-node',
+                            'icon' => 'bundles/kitpagesedm/icon/delete-file.png',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_delete_node',
+                                array(
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
+                                )
+                            )
+                        );
+                    } else {
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_ADD_DIRECTORY,
+                            'label' => 'add directory',
+                            'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
+                            'dataPopup' => array(
+                                'fieldName' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
+                                'fieldValue'=> $node->getId(),
+                                'rel' => "kitpages_edmbundle_nodedirectoryform"
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_ADD_FILE,
+                            'label' => 'add file',
+                            'icon' => 'bundles/kitpagesedm/icon/add-file.png',
+                            'dataPopup' => array(
+                                'fieldName' => 'kitpages_edmbundle_nodefileform_parent_id',
+                                'fieldValue'=> $node->getId(),
+                                'rel' => "kitpages_edmbundle_nodefileform"
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_DISABLE_DIRECTORY,
+                            'label' => 'delete directory '.$node->getLabel(),
+                            'classLink' => 'kit-edm-delete-node',
+                            'icon' => 'bundles/kitpagesedm/icon/disable-file.png',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_disable_node',
+                                array(
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
+                                )
+                            )
+                        );
+                    }
+                    if (isset($this->actionList[Node::NODE_TYPE_DIRECTORY])) {
+                        foreach($this->actionList[Node::NODE_TYPE_DIRECTORY] as $action) {
+                            $nodeTree['actionList'][] = $this->parseAction($action, $node);
+                        }
+                    }
+                } elseif ($node->getNodeType() == Node::NODE_TYPE_FILE) {
+                    if($nodeStatus == Node::NODE_STATUS_DISABLE ) {
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_RETRIEVE_FILE,
+                            'label' => 'undelete file',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_retrieve_node',
+                                array(
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
+                                )
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_DELETE_FILE,
+                            'label' => 'delete file '.$node->getLabel().' definitely!',
+                            'classLink' => 'kit-edm-delete-node',
+                            'icon' => 'bundles/kitpagesedm/icon/delete-file.png',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_delete_node',
+                                array(
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
+                                )
+                            )
+                        );
+                    } else {
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_ADD_FILE_VERSION,
+                            'label' => 'add version',
+                            'icon' => 'bundles/kitpagesedm/icon/add-file-version.png',
+                            'dataPopup' => array(
+                                'fieldName' => 'kitpages_edmbundle_nodefileversionform_node_id',
+                                'fieldValue'=> $node->getId(),
+                                'rel' => "kitpages_edmbundle_nodefileversionform"
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_DISABLE_FILE,
+                            'label' => 'delete file '.$node->getLabel(),
+                            'classLink' => 'kit-edm-delete-node',
+                            'icon' => 'bundles/kitpagesedm/icon/disable-file.png',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_disable_node',
+                                array(
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
+                                )
+                            )
+                        );
+                    }
+                    if (isset($this->actionList[Node::NODE_TYPE_FILE])) {
+                        foreach($this->actionList[Node::NODE_TYPE_FILE] as $action) {
+                            $nodeTree['actionList'][] = $this->parseAction($action, $node);
+                        }
+                    }
+                }
+            }
+            $event->set("nodeTree", $nodeTree);
+            $this->dispatcher->dispatch(KitpagesEdmEvents::afterDisplayNodeInTree, $event);
+            $nodeTree = $event->get("nodeTree");
+            $nodeTree['children'] = $this->nodeChildren($node, $kitpages_target);
+            return $nodeTree;
+        }
+    }
+
+
+    public function nodeChildren($nodeParent, $kitpages_target = null)
     {
         $em = $this->doctrine->getEntityManager();
 
@@ -161,76 +331,64 @@ class TreeManager {
         $nodeListRenderer = array();
 
         foreach($nodeList as $node) {
-            $event = new TreeEvent();
-            $event->setNode($nodeParent);
-            $this->getDispatcher()->dispatch(KitpagesEdmEvents::onDisplayNodeInTree, $event);
-            if (!$event->isDefaultPrevented()) {
-
-                $nodeTree = array();
-                $nodeTree['id'] = $node->getId();
-                $nodeTree['label'] = $node->getLabel();
-                $nodeTree['nodeType'] =  $node->getNodeType();
-
-                if ($node->getNodeType() == Node::NODE_TYPE_DIRECTORY) {
-                    $nodeTree['actionList'][] = array(
-                        'id' => '',
-                        'label' => 'add directory',
-                        'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
-                        'dataPopup' => array(
-                            'fieldName' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
-                            'fieldValue'=> $node->getId(),
-                            'rel' => "kitpages_edmbundle_nodedirectoryform"
-                        )
-                    );
-                    $nodeTree['actionList'][] = array(
-                        'id' => '',
-                        'label' => 'add file',
-                        'icon' => 'bundles/kitpagesedm/icon/add-file.png',
-                        'dataPopup' => array(
-                            'fieldName' => 'kitpages_edmbundle_nodefileform_parent_id',
-                            'fieldValue'=> $node->getId(),
-                            'rel' => "kitpages_edmbundle_nodefileform"
-                        )
-                    );
-                    if (isset($this->actionList[Node::NODE_TYPE_DIRECTORY])) {
-                        foreach($this->actionList[Node::NODE_TYPE_DIRECTORY] as $action) {
-                            $nodeTree['actionList'][] = $this->parseAction($action, $node);
-                        }
-                    }
-                } elseif ($node->getNodeType() == Node::NODE_TYPE_FILE) {
-                    $nodeTree['url'] = $this->router->generate(
-                        'kitpages_edm_view_node',
-                        array(
-                            'nodeId' => $node->getId()
-                        )
-                    );
-                    $nodeTree['actionList'][] = array(
-                        'id' => '',
-                        'label' => 'add version',
-                        'icon' => 'bundles/kitpagesedm/icon/add-file-version.png',
-                        'dataPopup' => array(
-                            'fieldName' => 'kitpages_edmbundle_nodefileversionform_node_id',
-                            'fieldValue'=> $node->getId(),
-                            'rel' => "kitpages_edmbundle_nodefileversionform"
-                        )
-                    );
-                    if (isset($this->actionList[Node::NODE_TYPE_FILE])) {
-                        foreach($this->actionList[Node::NODE_TYPE_FILE] as $action) {
-                            $nodeTree['actionList'][] = $this->parseAction($action, $node);
-                        }
-                    }
-                }
-
+            if (
+                null != $nodeRenderer = $this->nodeInTree($node, $nodeParent->getStatus(), $kitpages_target)) {
+                $nodeListRenderer[] = $nodeRenderer;
             }
-            $event->set("nodeTree", $nodeTree);
-            $this->getDispatcher()->dispatch(KitpagesEdmEvents::afterDisplayNodeInTree, $event);
-            $nodeTree = $event->get("nodeTree");
-            $nodeTree['children'] = $this->nodeChildren($node);
-            $nodeListRenderer[] = $nodeTree;
-
         }
 
         return $nodeListRenderer;
+    }
+
+    public function deleteNode($node, $recursive)
+    {
+        $event = new TreeEvent();
+        $event->setNode($node);
+        $this->dispatcher->dispatch(KitpagesEdmEvents::onDeleteNode, $event);
+        if (!$event->isDefaultPrevented()) {
+            $nodeType = $node->getNodeType();
+            $em = $this->doctrine->getEntityManager();
+            $em->remove($node);
+
+            if ($nodeType == Node::NODE_TYPE_FILE) {
+                $this->fileManager->deleteFile($node->getFile());
+            }
+            if ($recursive && $nodeType == Node::NODE_TYPE_DIRECTORY) {
+                $nodeChildList = $em->getRepository('KitpagesEdmBundle:Node')->children($node, true);
+                foreach($nodeChildList as $nodeChild) {
+                    $this->deleteNode($nodeChild, false);
+                }
+            }
+            $em->flush();
+        }
+        $this->dispatcher->dispatch(KitpagesEdmEvents::afterDeleteNode, $event);
+    }
+
+    public function modifyStatusNode($node, $status, $recursive)
+    {
+        $event = new TreeEvent();
+        $event->setNode($node);
+        $this->dispatcher->dispatch(KitpagesEdmEvents::onModifyStatusNode, $event);
+        if (!$event->isDefaultPrevented()) {
+            $nodeType = $node->getNodeType();
+            $em = $this->doctrine->getEntityManager();
+            $node->setStatus($status);
+            $em->persist($node);
+
+            if ($nodeType == Node::NODE_TYPE_FILE) {
+                $this->fileManager->modifyStatus($node->getFile(), $status);
+            }
+
+            $em->flush();
+
+            if ($recursive && $nodeType == Node::NODE_TYPE_DIRECTORY) {
+                $nodeChildList = $em->getRepository('KitpagesEdmBundle:Node')->children($node, true);
+                foreach($nodeChildList as $nodeChild) {
+                    $this->modifyStatusNode($nodeChild, $status, false);
+                }
+            }
+        }
+        $this->dispatcher->dispatch(KitpagesEdmEvents::afterModifyStatusNode, $event);
     }
 
     public function parseAction(array $action, $node)
@@ -258,7 +416,6 @@ class TreeManager {
                 $matches
             );
             if ($findMethod > 0) {
-                echo var_dump($matches);
                 foreach($matches[1] as $key => $method) {
                    $action['url'] = str_replace($matches[0][$key], $node->$method(), $action['url']);
                 }

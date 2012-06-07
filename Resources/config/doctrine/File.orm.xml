@@ -38,9 +38,6 @@
              target-entity="Kitpages\EdmBundle\Entity\Node"
              mapped-by="file"
          >
-             <cascade>
-                 <cascade-persist />
-             </cascade>
          </one-to-one>
 
         <many-to-one field="originalVersion" target-entity="Kitpages\EdmBundle\Entity\File" nullable="true" >
@@ -54,15 +51,15 @@
             target-entity="Kitpages\EdmBundle\Entity\File"
             mapped-by="previousVersion"
         >
-            <cascade>
-                <cascade-persist />
-            </cascade>
         </one-to-one>
 
         <one-to-one field="previousVersion" target-entity="Kitpages\EdmBundle\Entity\File" inversed-by="nextVersion" nullable="true" >
             <join-columns>
                 <join-column name="previous_version_id" referenced-column-name="id" nullable="true" on-delete="SET NULL" on-update="CASCADE" />
             </join-columns>
+            <cascade>
+                <cascade-all />
+            </cascade>
         </one-to-one>
 
     </entity>

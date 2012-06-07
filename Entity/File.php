@@ -3,7 +3,7 @@ namespace Kitpages\EdmBundle\Entity;
 
 class File {
 
-    CONST FILE_STATUS_DELETE = "delete";
+    CONST FILE_STATUS_DISABLE = "disable";
     CONST FILE_STATUS_CURRENT = "current";
     CONST FILE_STATUS_OLD_VERSION = "old_version";
 

@@ -22,10 +22,10 @@
         <field name="label" column="label" type="string"  nullable="true" length="250"/>
 
         <field name="title" column="title" type="string"  nullable="true" length="250"/>
-        <field name="comment" column="comment" type="text"  nullable="true" />
+        <field name="comment" column="comment" type="text" nullable="true" />
 
         <field name="nodeType" column="node_type" type="string" length="100" />
-
+        <field name="status" column="status" type="string" length="250" nullable="true" />
         <field name="data" column="data" type="array" nullable="true" />
 
         <field name="createdAt" type="datetime">
@@ -57,6 +57,9 @@
             <join-columns>
                 <join-column name="file_id" referenced-column-name="id" nullable="true" on-delete="SET NULL" on-update="CASCADE" />
             </join-columns>
+            <cascade>
+                <cascade-all />
+            </cascade>
         </one-to-one>
 
         <gedmo:tree type="nested"/>

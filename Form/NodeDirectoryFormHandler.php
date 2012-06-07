@@ -9,6 +9,9 @@ use Symfony\Component\Form\FormError;
 use Kitpages\EdmBundle\Entity\Node;
 use Kitpages\EdmBundle\Service\TreeMap;
 use Kitpages\UtilBundle\Service\Hash;
+use Kitpages\EdmBundle\Event\TreeEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Kitpages\EdmBundle\KitpagesEdmEvents;
 
 class NodeDirectoryFormHandler
 {
@@ -17,12 +20,19 @@ class NodeDirectoryFormHandler
     protected $treeMap;
     protected $kitpagesUtilHash;
 
-    public function __construct(Registry $doctrine, Request $request, TreeMap $treeMap, Hash $kitpagesUtilHash)
+    public function __construct(
+        Registry $doctrine,
+        Request $request,
+        TreeMap $treeMap,
+        Hash $kitpagesUtilHash,
+        EventDispatcherInterface $dispatcher
+    )
     {
         $this->doctrine = $doctrine;
         $this->request = $request;
         $this->treeMap = $treeMap;
         $this->kitpagesUtilHash = $kitpagesUtilHash;
+        $this->dispatcher = $dispatcher;
     }
 
     public function process(Form $form, $entity)
@@ -55,6 +65,11 @@ class NodeDirectoryFormHandler
                     $entity->setNodeType(Node::NODE_TYPE_DIRECTORY);
                     $em->persist($entity);
                     $em->flush();
+
+                    $event = new TreeEvent();
+                    $event->setNode($entity);
+                    $this->dispatcher->dispatch(KitpagesEdmEvents::afterCreateNodeDirectory, $event);
+
                     $this->request->getSession()->setFlash('notice', 'Your directory is created');
                 } else {
                     $this->request->getSession()->setFlash("error", "technical error, not uploaded");

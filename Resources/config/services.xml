@@ -22,6 +22,7 @@
             <argument type="service" id="request" strict="false" />
             <argument type="service" id="kitpages_edm.tree_map" />
             <argument type="service" id="kitpages_util.hash" />
+            <argument type="service" id="event_dispatcher" />
         </service>
         <service id="kitpages_edm.node.file.form.handler" class="Kitpages\EdmBundle\Form\NodeFileFormHandler">
             <argument type="service" id="doctrine" />

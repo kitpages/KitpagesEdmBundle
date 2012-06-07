@@ -1,6 +1,6 @@
     <ul class="kit-cms-tree-node-container">
         {% for kitEdmNode in nodeChildren %}
-            <li class="kit-cms-tree-node ">
+            <li class="kit-cms-tree-node {{kitEdmNode.class|default()}}">
                 <div class="kit-cms-tree-line">
                     {% if kitEdmNode.url is defined %}
                         <a href="{{kitEdmNode.url}}">
@@ -14,9 +14,9 @@
                     {% for kitEdmNodeAction in kitEdmNode.actionList %}
                         <li class="{{kitEdmNodeAction.class|default()}}" >
                         {% if kitEdmNodeAction.dataPopup is defined %}
-                            <a href="#" rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}" class="poplight" title="{{kitEdmNodeAction.label}}">
+                            <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}" rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}" title="{{kitEdmNodeAction.label}}">
                         {% else %}
-                            <a href="{{kitEdmNodeAction.url}}" title="{{kitEdmNodeAction.label}}">
+                            <a href="{{kitEdmNodeAction.url}}" class="{{kitEdmNodeAction.classLink|default()}}" title="{{kitEdmNodeAction.label}}">
                         {% endif %}
                         {% if kitEdmNodeAction.icon is defined %}
                             <img src="{{asset(kitEdmNodeAction.icon)}}">

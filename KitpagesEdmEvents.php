@@ -11,6 +11,12 @@ final class KitpagesEdmEvents
 
     const onNewVersionFileUpload = 'kitpages.edm.on_new_version_file_upload';
     const afterNewVersionFileUpload = 'kitpages.edm.after_new_version_file_upload';
-    
 
+    const onDeleteNode = 'kitpages.edm.on_delete_node';
+    const afterDeleteNode = 'kitpages.edm.after_delete_node';
+
+    const onModifyStatusNode = 'kitpages.edm.on_modify_status_node';
+    const afterModifyStatusNode = 'kitpages.edm.after_modify_status_node';
+
+    const afterCreateNodeDirectory = 'kitpages.edm.after_create_node_directory';
 }

@@ -21,3 +21,21 @@ kitpages_edm_view_node:
     defaults: { _controller: KitpagesEdmBundle:Node:view }
     requirements:
         nodeId: \d+
+
+kitpages_edm_disable_node:
+    pattern:  /disableNode/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:disableNode }
+    requirements:
+        nodeId: \d+
+
+kitpages_edm_retrieve_node:
+    pattern:  /retrieveNode/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:retrieveNode }
+    requirements:
+        nodeId: \d+
+
+kitpages_edm_delete_node:
+    pattern:  /deleteNode/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:deleteNode }
+    requirements:
+        nodeId: \d+

@@ -31,22 +31,6 @@ class NodeController extends Controller
             return $this->redirect($target);
         }
 
-
-//        $entity = new Node();
-//
-//        // build basic form
-//        $form   = $this->createForm(new NodeDirectoryForm(), $entity);
-//
-//        $formHandler = $this->container->get('kitpages_edm.node.directory.form.handler');
-//        $process = $formHandler->process($form, $entity);
-//
-//        $target = $this->getRequest()->query->get('kitpages_target', null);
-//        if ($target) {
-//            return $this->redirect($target);
-//        }
-
-
-
     }
 
     public function addDirectoryAction()
@@ -97,7 +81,69 @@ class NodeController extends Controller
         if ($target) {
             return $this->redirect($target);
         }
+    }
 
+    public function disableNodeAction($nodeId)
+    {
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $node = $repositoryNode->find($nodeId);
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+
+        $nodeType = $node->getNodeType();
+
+        $treeManager->modifyStatusNode($node, Node::NODE_STATUS_DISABLE, true);
+        if ($nodeType == Node::NODE_TYPE_FILE) {
+            $this->get('request')->getSession()->setFlash('notice', 'File deleted');
+        } elseif ($nodeType == Node::NODE_TYPE_DIRECTORY) {
+            $this->get('request')->getSession()->setFlash('notice', 'Directory deleted');
+        }
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+
+        return $this->redirect($target);
+    }
+
+    public function retrieveNodeAction($nodeId)
+    {
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $node = $repositoryNode->find($nodeId);
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+
+        $nodeType = $node->getNodeType();
+
+        $treeManager->modifyStatusNode($node, null, true);
+        if ($nodeType == Node::NODE_TYPE_FILE) {
+            $this->get('request')->getSession()->setFlash('notice', 'File retrieve');
+        } elseif ($nodeType == Node::NODE_TYPE_DIRECTORY) {
+            $this->get('request')->getSession()->setFlash('notice', 'Directory retrieve');
+        }
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+
+        return $this->redirect($target);
+    }
+
+    public function deleteNodeAction($nodeId)
+    {
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $node = $repositoryNode->find($nodeId);
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+
+        $nodeType = $node->getNodeType();
+
+        $treeManager->deleteNode($node, true);
+        if ($nodeType == Node::NODE_TYPE_FILE) {
+            $this->get('request')->getSession()->setFlash('notice', 'File deleted definitely');
+        } elseif ($nodeType == Node::NODE_TYPE_DIRECTORY) {
+            $this->get('request')->getSession()->setFlash('notice', 'Directory deleted definitely');
+        }
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+
+        return $this->redirect($target);
     }
 
 }

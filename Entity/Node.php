@@ -7,6 +7,8 @@ class Node {
     CONST NODE_TYPE_FILE = "file";
     CONST NODE_TYPE_DIRECTORY = "directory";
 
+    CONST NODE_STATUS_DISABLE = "disable";
+
     /**
      * @var string $treeId
      */
@@ -472,5 +474,30 @@ class Node {
     public function getParent()
     {
         return $this->parent;
+    }
+    /**
+     * @var string $status
+     */
+    private $status;
+
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string 
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

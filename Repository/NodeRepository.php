@@ -39,7 +39,7 @@ class NodeRepository extends NestedTreeRepository
                 WHERE n.right > :right
                   AND n.left < :left
                   AND n.nodeType = :nodeType
-                ORDER BY n.left
+                ORDER BY n.left DESC
               ")
             ->setParameter("right", $node->getRight())
             ->setParameter("left", $node->getLeft())

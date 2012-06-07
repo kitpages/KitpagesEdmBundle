@@ -50,9 +50,10 @@ class TreeController extends Controller
         $formFile   = $this->createForm(new NodeFileForm($hash), $entity);
 
         $formFileVersion   = $this->createForm(new NodeFileVersionForm());
+        $nodeList = $treeManager->nodeInTree($node, null, $this->get('request')->getPathInfo());
 
         return $this->render('KitpagesEdmBundle:Tree:nodeTree.html.twig', array(
-            'nodeChildren' => $treeManager->nodeChildren($node),
+            'nodeChildren' => array($nodeList),
             'formDirectory'   => $formDirectory->createView(),
             'formFile'   => $formFile->createView(),
             'formFileVersion'   => $formFileVersion->createView(),
