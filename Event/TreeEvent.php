@@ -10,6 +10,7 @@ class TreeEvent extends Event
     protected $data = array();
     protected $node = null;
     protected $isPrevented = false;
+    protected $sendMail = false;
 
     public function __construct()
     {
