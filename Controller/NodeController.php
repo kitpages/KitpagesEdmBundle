@@ -4,10 +4,12 @@ namespace Kitpages\EdmBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Kitpages\EdmBundle\Entity\File;
 use Kitpages\EdmBundle\Entity\Node;
 use Kitpages\EdmBundle\Form\NodeDirectoryForm;
 use Kitpages\EdmBundle\Form\NodeFileForm;
 use Kitpages\EdmBundle\Form\NodeFileVersionForm;
+use Kitpages\FileSystemBundle\Model\AdapterFile;
 
 class NodeController extends Controller
 {
@@ -144,6 +146,22 @@ class NodeController extends Controller
         $target = $this->getRequest()->query->get('kitpages_target', null);
 
         return $this->redirect($target);
+    }
+
+    public function renderFileAction(){
+        $fileManager = $this->get('kitpages_edm.file.manager');
+        $em = $this->getDoctrine()->getEntityManager();
+        $fileId = $this->getRequest()->query->get('id', null);
+        if (!is_null($fileId)) {
+            $file = $em->getRepository('KitpagesEdmBundle:File')->find($fileId);
+            if ($file != null) {
+                $fileManager->getFileSystem()->sendFileToBrowser(
+                    new AdapterFile($fileManager->getFilePath($file)),
+                    $file->getFileName()
+                );
+            }
+        }
+        return null;
     }
 
 }

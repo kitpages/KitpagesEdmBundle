@@ -45,6 +45,10 @@ class FileManager {
 
     }
 
+    public function getFileSystem() {
+        return $this->fileSystem;
+    }
+
     ////
     // actions
     ////

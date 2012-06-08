@@ -4,6 +4,10 @@
 #    requirements:
 #        parentNodeId: \d+
 
+kitpages_file_render:
+    pattern:  /render/{entityFileName}
+    defaults: { _controller: KitpagesFileBundle:Render:view, entityFileName:default }
+
 kitpages_edm_add_directory:
     pattern:  /addDirectory
     defaults: { _controller: KitpagesEdmBundle:Node:addDirectory }
