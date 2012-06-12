@@ -2,18 +2,20 @@
         {% for kitEdmNode in nodeChildren %}
             <li class="kit-edm-tree-node {{kitEdmNode.class|default()}}">
                 <div class="kit-edm-tree-line">
-                    {% if kitEdmNode.nodeType == 'directory' %}
-                        <img src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
-                    {% endif %}
-                    {% if kitEdmNode.url is defined %}
-                        <a href="{{kitEdmNode.url}}">
-                    {% endif %}
-                        <span class="kit-edm-tree-page-id kit-edm-advanced">[{{kitEdmNode.id}}]</span>
-                        <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
-                        <span class="kit-edm-tree-page-title">{{kitEdmNode.label|raw}}</span>
-                    {% if kitEdmNode.url is defined %}
-                        </a>
-                    {% endif %}
+                    <div class="kit-edm-tree-line-start">
+                        {% if kitEdmNode.nodeType == 'directory' %}
+                            <img src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
+                        {% endif %}
+                        {% if kitEdmNode.url is defined %}
+                            <a href="{{kitEdmNode.url}}">
+                        {% endif %}
+                            <span class="kit-edm-tree-page-id kit-edm-advanced">[{{kitEdmNode.id}}]</span>
+                            <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
+                            <span class="kit-edm-tree-page-title">{{kitEdmNode.label|raw}}</span>
+                        {% if kitEdmNode.url is defined %}
+                            </a>
+                        {% endif %}
+                    </div>
                     <ul class="kit-edm-tree-actions kit-edm-menu">
                     {% for kitEdmNodeAction in kitEdmNode.actionList %}
                         <li class="{{kitEdmNodeAction.class|default()}}" >
