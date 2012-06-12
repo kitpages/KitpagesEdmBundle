@@ -20,14 +20,15 @@ class NodeController extends Controller
 
         $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
         $node = $repositoryNode->find($nodeId);
-
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
         $nodeType = $node->getNodeType();
 
         $target = $this->getRequest()->query->get('kitpages_target', null);
 
         if ($nodeType == Node::NODE_TYPE_FILE) {
             return $this->render('KitpagesEdmBundle:Node:view.html.twig', array(
-                'node' => $node
+                'node' => $node,
+                'actionList' => $treeManager->nodeFileActionList($node, array(), $target)
             ));
         } else {
             return $this->redirect($target);
