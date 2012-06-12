@@ -9,7 +9,6 @@
                         {% if kitEdmNode.url is defined %}
                             <a href="{{kitEdmNode.url}}">
                         {% endif %}
-                            <span class="kit-edm-tree-page-id kit-edm-advanced">[{{kitEdmNode.id}}]</span>
                             <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
                             <span class="kit-edm-tree-page-title">{{kitEdmNode.label|raw}}</span>
                         {% if kitEdmNode.url is defined %}
