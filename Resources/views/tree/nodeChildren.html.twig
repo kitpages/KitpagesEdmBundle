@@ -1,7 +1,7 @@
     <ul class="kit-edm-tree-node-container">
         {% for kitEdmNode in nodeChildren %}
             <li class="kit-edm-tree-node {{kitEdmNode.class|default()}}">
-                <div class="kit-edm-tree-line">
+                <div class="kit-edm-tree-line kit-edm-tree-line-{{kitEdmNode.nodeType}}">
                     <div class="kit-edm-tree-line-start kit-edm-tree-line-start-{{kitEdmNode.nodeType}}">
                         {% if kitEdmNode.nodeType == 'directory' %}
                             <img src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
