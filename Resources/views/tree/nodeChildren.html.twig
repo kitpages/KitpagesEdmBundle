@@ -2,10 +2,14 @@
         {% for kitEdmNode in nodeChildren %}
             <li class="kit-cms-tree-node {{kitEdmNode.class|default()}}">
                 <div class="kit-cms-tree-line">
+                    {% if kitEdmNode.nodeType == 'directory' %}
+                        <img src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
+                    {% endif %}
                     {% if kitEdmNode.url is defined %}
                         <a href="{{kitEdmNode.url}}">
                     {% endif %}
                         <span class="kit-cms-tree-page-id kit-cms-advanced">[{{kitEdmNode.id}}]</span>
+                        <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
                         <span class="kit-cms-tree-page-title">{{kitEdmNode.label|raw}}</span>
                     {% if kitEdmNode.url is defined %}
                         </a>
@@ -13,17 +17,17 @@
                     <ul class="kit-cms-tree-actions kit-cms-menu">
                     {% for kitEdmNodeAction in kitEdmNode.actionList %}
                         <li class="{{kitEdmNodeAction.class|default()}}" >
-                        {% if kitEdmNodeAction.dataPopup is defined %}
-                            <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}" rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}" title="{{kitEdmNodeAction.label}}">
-                        {% else %}
-                            <a href="{{kitEdmNodeAction.url}}" class="{{kitEdmNodeAction.classLink|default()}}" title="{{kitEdmNodeAction.label}}">
-                        {% endif %}
-                        {% if kitEdmNodeAction.icon is defined %}
-                            <img src="{{asset(kitEdmNodeAction.icon)}}">
-                        {% else %}
-                            {{kitEdmNodeAction.label}}
-                        {% endif %}
-                            </a>
+                            {% if kitEdmNodeAction.dataPopup is defined %}
+                                <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}" rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}" title="{{kitEdmNodeAction.label}}">
+                            {% else %}
+                                <a href="{{kitEdmNodeAction.url}}" class="{{kitEdmNodeAction.classLink|default()}}" title="{{kitEdmNodeAction.label}}">
+                            {% endif %}
+                            {% if kitEdmNodeAction.icon is defined %}
+                                <img src="{{asset(kitEdmNodeAction.icon)}}">
+                            {% else %}
+                                {{kitEdmNodeAction.label}}
+                            {% endif %}
+                                </a>
                         </li>
                     {% endfor %}
                     </ul>
