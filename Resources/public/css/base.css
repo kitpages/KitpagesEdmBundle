@@ -16,9 +16,6 @@
 .kit-edm-tree > .kit-edm-tree-node-container:first-child {
     margin: 0px;
 }
-.kit-edm-tree > .kit-edm-tree-node-container:first-child > .kit-edm-tree-node:first-child > .kit-edm-tree-line:first-child {
-    border-top: 1px solid #D0D0D0;
-}
 .kit-edm .kit-edm-tree-node-container {
     margin-left: 20px;
     list-style: none;
@@ -26,9 +23,6 @@
 .kit-edm-tree-line {
     margin-left:15px;
     background-color: #F0F0F0;
-    border-bottom: 1px solid #D0D0D0;
-    border-left: 1px solid #D0D0D0;
-    border-right: 1px solid #D0D0D0;
 }
 .kit-edm-tree-line:hover {
     background-color: #FFFF80;
