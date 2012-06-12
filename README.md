@@ -64,7 +64,17 @@ Let's see the configuration in config.yml
 
 Usage example
 =============
-
     // get the edm manager
     $interneEdm = $this->get("kitpages_edm.tree.interne");
     $clientEdm = $this->get("kitpages_edm.tree.client");
+
+Add the following code into the pages where the tree is displayed
+    <link rel="stylesheet" href="{{ asset('bundles/kitpagesEdm/css/base.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/kitpagesEdm/css/popup.css') }}">
+    <script type="text/javascript" src="{{ asset ("bundles/kitpagesEdm/js/popup.js") }}" ></script>
+
+    {% render 'KitpagesEdmBundle:Tree:widgetNodeTree' with {
+        'nodeId': node.node_id,
+        'user': {'id': user.id, 'name': user.username, 'email': user.email},
+        'actionList': listAction
+    } %}
