@@ -1,20 +1,20 @@
-    <ul class="kit-cms-tree-node-container">
+    <ul class="kit-edm-tree-node-container">
         {% for kitEdmNode in nodeChildren %}
-            <li class="kit-cms-tree-node {{kitEdmNode.class|default()}}">
-                <div class="kit-cms-tree-line">
+            <li class="kit-edm-tree-node {{kitEdmNode.class|default()}}">
+                <div class="kit-edm-tree-line">
                     {% if kitEdmNode.nodeType == 'directory' %}
                         <img src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
                     {% endif %}
                     {% if kitEdmNode.url is defined %}
                         <a href="{{kitEdmNode.url}}">
                     {% endif %}
-                        <span class="kit-cms-tree-page-id kit-cms-advanced">[{{kitEdmNode.id}}]</span>
+                        <span class="kit-edm-tree-page-id kit-edm-advanced">[{{kitEdmNode.id}}]</span>
                         <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
-                        <span class="kit-cms-tree-page-title">{{kitEdmNode.label|raw}}</span>
+                        <span class="kit-edm-tree-page-title">{{kitEdmNode.label|raw}}</span>
                     {% if kitEdmNode.url is defined %}
                         </a>
                     {% endif %}
-                    <ul class="kit-cms-tree-actions kit-cms-menu">
+                    <ul class="kit-edm-tree-actions kit-edm-menu">
                     {% for kitEdmNodeAction in kitEdmNode.actionList %}
                         <li class="{{kitEdmNodeAction.class|default()}}" >
                             {% if kitEdmNodeAction.dataPopup is defined %}
@@ -34,7 +34,7 @@
                     <div style="clear:both"></div>
                 </div>
                 <div style="clear:both" ></div>
-                <div class="kit-cms-tree-state-node">
+                <div class="kit-edm-tree-state-node">
                     {% include 'KitpagesEdmBundle:Tree:nodeChildren.html.twig' with {'nodeChildren': kitEdmNode.children } %}
                 </div>
             </li>
