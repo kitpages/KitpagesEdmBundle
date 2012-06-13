@@ -10,6 +10,8 @@ use Kitpages\EdmBundle\Form\NodeDirectoryForm;
 use Kitpages\EdmBundle\Form\NodeFileForm;
 use Kitpages\EdmBundle\Form\NodeFileVersionForm;
 use Kitpages\FileSystemBundle\Model\AdapterFile;
+use Kitpages\EdmBundle\Form\NodeFileVersionForm;
+
 
 class NodeController extends Controller
 {
@@ -26,8 +28,12 @@ class NodeController extends Controller
         $target = $this->getRequest()->query->get('kitpages_target', null);
 
         if ($nodeType == Node::NODE_TYPE_FILE) {
+
+            $formFileVersion   = $this->createForm(new NodeFileVersionForm());
+
             return $this->render('KitpagesEdmBundle:Node:view.html.twig', array(
                 'node' => $node,
+                'formFileVersion'   => $formFileVersion->createView(),
                 'actionList' => $treeManager->nodeFileActionList($node, array(), $target)
             ));
         } else {
