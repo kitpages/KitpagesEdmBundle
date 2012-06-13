@@ -12,7 +12,6 @@ use Kitpages\EdmBundle\Form\NodeFileVersionForm;
 use Kitpages\FileSystemBundle\Model\AdapterFile;
 use Kitpages\EdmBundle\Form\NodeFileVersionForm;
 
-
 class NodeController extends Controller
 {
 
