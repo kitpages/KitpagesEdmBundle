@@ -10,7 +10,6 @@ use Kitpages\EdmBundle\Form\NodeDirectoryForm;
 use Kitpages\EdmBundle\Form\NodeFileForm;
 use Kitpages\EdmBundle\Form\NodeFileVersionForm;
 use Kitpages\FileSystemBundle\Model\AdapterFile;
-use Kitpages\EdmBundle\Form\NodeFileVersionForm;
 
 class NodeController extends Controller
 {
