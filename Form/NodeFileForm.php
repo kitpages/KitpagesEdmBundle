@@ -82,13 +82,13 @@ class NodeFileForm extends AbstractType
             'label',
             'text',
             array(
-                'label' => 'label',
+                'label' => 'Label',
                 'required' => true,
             )
         );
 
         $builder->add(
-            'title',
+            'Title',
             'text',
             array(
                 'label' => 'title',
@@ -97,7 +97,7 @@ class NodeFileForm extends AbstractType
         );
 
         $builder->add(
-            'comment',
+            'Comment',
             'textarea',
             array(
                 'label' => 'comment',

@@ -71,7 +71,7 @@ class NodeDirectoryForm extends AbstractType
             'label',
             'text',
             array(
-                'label' => 'label',
+                'label' => 'Label',
                 'required' => true,
             )
         );

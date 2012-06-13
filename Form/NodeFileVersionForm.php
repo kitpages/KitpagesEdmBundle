@@ -26,7 +26,7 @@ class NodeFileVersionForm extends AbstractType
             'versionNote',
             'textarea',
             array(
-                'label' => 'note version',
+                'label' => 'Note version',
                 'required' => false,
             )
         );
