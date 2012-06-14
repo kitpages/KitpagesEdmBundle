@@ -159,7 +159,7 @@ class NodeController extends Controller
 
         if (!is_null($fileId)) {
             $file = $em->getRepository('KitpagesEdmBundle:File')->find($fileId);
-            $node = $file->getNode();
+            $node = $em->getRepository('KitpagesEdmBundle:Node')->getNodeByFileId($fileId);
             $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
             $fileManager = $treeManager->getFileManager();
             if ($file != null) {

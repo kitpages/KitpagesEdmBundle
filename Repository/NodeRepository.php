@@ -53,4 +53,27 @@ class NodeRepository extends NestedTreeRepository
         }
     }
 
+    public function getNodeByFileId($fileId)
+    {
+        $node = $this->_em
+            ->createQuery("
+                SELECT n
+                FROM KitpagesEdmBundle:Node n
+                INNER JOIN n.file f
+                LEFT JOIN f.originalVersion ov
+                WHERE f.id = :fileId
+                  OR ov.id = :fileId
+                ORDER BY f.id DESC
+              ")
+            ->setParameter("fileId", $fileId)
+            ->setMaxResults(1)
+            ->getResult();
+        if (count($node) > 0) {
+            return $node[0];
+        } else {
+            throw new EdmException("No Node for the file");
+        }
+
+    }
+
 }
