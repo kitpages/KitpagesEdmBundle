@@ -5,7 +5,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\EdmBundle\Entity\File" repository-class="KitpagesEdmBundle\Repository\FileRepository" table="kit_edm_file">
+    <entity name="Kitpages\EdmBundle\Entity\File" table="kit_edm_file">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>
