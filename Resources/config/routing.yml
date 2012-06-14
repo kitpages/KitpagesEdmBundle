@@ -5,8 +5,8 @@
 #        parentNodeId: \d+
 
 kitpages_edm_render:
-    pattern:  /render/{entityFileName}
-    defaults: { _controller: KitpagesFileBundle:Render:view, entityFileName:default }
+    pattern:  /render
+    defaults: { _controller: KitpagesEdmBundle:Node:renderFile }
 
 kitpages_edm_add_directory:
     pattern:  /addDirectory

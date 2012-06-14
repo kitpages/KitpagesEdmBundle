@@ -63,6 +63,11 @@ class TreeManager {
         $this->rootTree = $root;
     }
 
+    public function getFileManager()
+    {
+        return $this->fileManager;
+    }
+
     public function setActionList($actionList)
     {
         $this->actionList = $actionList;
@@ -139,7 +144,8 @@ class TreeManager {
 
             $node = $event->getNode();
             $node->setFile($file);
-
+            $node->setLabel($uploadedFile->getClientOriginalName());
+            $em->persist($node);
             $em->persist($file);
             $em->flush();
 
@@ -154,6 +160,8 @@ class TreeManager {
 
             $node = $event->getNode();
             $node->setFile($file);
+            $node->setLabel($uploadedFile->getClientOriginalName());
+            $em->persist($node);
             $em->flush();
 
             // send after event
@@ -172,6 +180,7 @@ class TreeManager {
             $nodeTree = array();
             $nodeTree['id'] = $node->getId();
             $nodeTree['label'] = $node->getLabel();
+            $nodeTree['title'] = $node->getTitle();
             $nodeTree['nodeType'] =  $node->getNodeType();
             $nodeStatus = $node->getStatus();
             if ($nodeStatus != null) {
@@ -218,7 +227,7 @@ class TreeManager {
                     } else {
                         $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_ADD_DIRECTORY,
-                            'label' => 'add directory',
+                            'label' => 'Add a directory',
                             'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
                             'dataPopup' => array(
                                 'fieldName' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
@@ -228,7 +237,7 @@ class TreeManager {
                         );
                         $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_ADD_FILE,
-                            'label' => 'add file',
+                            'label' => 'Add a file',
                             'icon' => 'bundles/kitpagesedm/icon/add-file.png',
                             'dataPopup' => array(
                                 'fieldName' => 'kitpages_edmbundle_nodefileform_parent_id',

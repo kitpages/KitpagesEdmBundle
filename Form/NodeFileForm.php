@@ -79,15 +79,6 @@ class NodeFileForm extends AbstractType
         );
 
         $builder->add(
-            'label',
-            'text',
-            array(
-                'label' => 'Label',
-                'required' => true,
-            )
-        );
-
-        $builder->add(
             'Title',
             'text',
             array(

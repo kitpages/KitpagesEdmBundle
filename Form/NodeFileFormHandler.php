@@ -49,16 +49,18 @@ class NodeFileFormHandler
                     $parent_id = $form['parent_id']->getData();
                     $sendEmail = $form['sendEmail']->getData();
 
+                    $dataFile = $form['fileUpload']->getData();
                     $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
                     $nodeParent = $repositoryNode->find($parent_id);
                     $entity->setParent($nodeParent);
                     $entity->setNodeType(Node::NODE_TYPE_FILE);
+                    $entity->setLabel('label temp');
                     $em->persist($entity);
                     $em->flush();
                     $em->refresh($entity);
 
                     $treeManager = $this->treeMap->getEdm($entity->getTreeId());
-                    $treeManager->uploadFile($entity, $form['fileUpload']->getData(), $sendEmail);
+                    $treeManager->uploadFile($entity, $dataFile, $sendEmail);
 
                     $this->request->getSession()->setFlash('notice', 'Your file is uploaded');
                 } else {

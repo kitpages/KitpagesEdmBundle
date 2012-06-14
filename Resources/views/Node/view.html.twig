@@ -1,21 +1,63 @@
 {% extends '::base.html.twig' %}
+{% block stylesheets %}
+{{parent()}}
+<link rel="stylesheet" href="{{ asset('bundles/kitpagesedm/css/base.css') }}">
+<link rel="stylesheet" href="{{ asset('bundles/kitpagesedm/css/popup.css') }}">
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script type="text/javascript" src="{{ asset ("bundles/kitpagesedm/js/popup.js") }}" ></script>
+{% endblock %}
 {% block body %}
 
-<div>
-<h2>{{ "File detail" | trans }}</h2>
-    {{node.label}}
-    <div>
+<div class="kit-edm-node-view">
+    <div class="kit-edm-node-view-title">
+        {{node.label}}<br />
+        {{node.title}}
+        <ul class="kit-edm-tree-actions kit-edm-menu">
+        {% for kitEdmNodeAction in actionList %}
+            <li class="{{kitEdmNodeAction.class|default()}}" >
+                {% if kitEdmNodeAction.dataPopup is defined %}
+                    <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}" rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}" title="{{kitEdmNodeAction.label}}">
+                {% else %}
+                    <a href="{{kitEdmNodeAction.url}}" class="{{kitEdmNodeAction.classLink|default()}}" title="{{kitEdmNodeAction.label}}">
+                {% endif %}
+                {% if kitEdmNodeAction.icon is defined %}
+                    <img src="{{asset(kitEdmNodeAction.icon)}}">
+                {% else %}
+                    {{kitEdmNodeAction.label}}
+                {% endif %}
+                    </a>
+            </li>
+        {% endfor %}
+            <li><a href="{{path ('kitpages_edm_render', {'id': node.file.id }) }}">Download</a></li>
+        </ul>
+        <div style="clear:both" ></div>
+    </div>
+    <div class="kit-edm-node-view-section-description">
         <h3>{{ "Description" | trans }}</h3>
-        {{node.comment}}
+        <p>{{node.comment}}</p>
     </div>
     {% if node.file != null %}
-    <div>
-        <h3>{{ "Information" | trans }}</h3>
+    <div class="kit-edm-node-view-section-information">
+        <h3>{{ "Informations" | trans }}</h3>
         <ul>
-            <li>{{ "Size" | trans }} : {{node.file.data.size // 1024 }} Ko</li>
-            <li>{{ "Date of latest version" | trans }} : {{node.file.updatedAt|date("d-m-Y")}}</li>
+            <li>{{ "Taille" | trans }} : {{node.file.data.size // 1024 }} Ko</li>
+            <li>{{ "Date de la dernière version :" | trans }} : {{node.file.updatedAt|date("d-m-Y")}}</li>
+            <li>{{ "Auteur" | trans }} : {{node.userEmail}}</li>
         </ul>
     </div>
     {% endif%}
+</div>
+<div class="popup_block kitpages_edmbundle_nodefileversionform">
+    <div class="kit-edm-tree-form-action-title">{{ "Add a new version" | trans }}</div>
+    <form method="post" action="{{ path("kitpages_edm_add_file_version", {kitpages_target: app.request.requestUri }) }}" {{ form_enctype(formFileVersion) }}>
+        {{ form_errors(formFileVersion) }}
+        {{ form_rest(formFileVersion) }}
+        <p>
+            <button type="submit" class="btn-standard">{{ "Send" | trans }}</button>
+        </p>
+        {{ form_widget(formFileVersion) }}
+    </form>
 </div>
 {% endblock %}

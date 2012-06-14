@@ -154,11 +154,14 @@ class NodeController extends Controller
     }
 
     public function renderFileAction(){
-        $fileManager = $this->get('kitpages_edm.file.manager');
         $em = $this->getDoctrine()->getEntityManager();
         $fileId = $this->getRequest()->query->get('id', null);
+
         if (!is_null($fileId)) {
             $file = $em->getRepository('KitpagesEdmBundle:File')->find($fileId);
+            $node = $file->getNode();
+            $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+            $fileManager = $treeManager->getFileManager();
             if ($file != null) {
                 $fileManager->getFileSystem()->sendFileToBrowser(
                     new AdapterFile($fileManager->getFilePath($file)),

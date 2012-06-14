@@ -11,7 +11,7 @@
                             {% endif %}
                         {% endif %}
                         {% if kitEdmNode.url is defined %}
-                            <a href="{{kitEdmNode.url}}">
+                            <a href="{{kitEdmNode.url}}" {% if kitEdmNode.title != null %}title="{{kitEdmNode.title}}"{% endif %} >
                         {% endif %}
                             <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
                             <span class="kit-edm-tree-page-title">{{kitEdmNode.label|raw}}</span>
