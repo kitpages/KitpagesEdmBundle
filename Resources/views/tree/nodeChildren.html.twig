@@ -4,7 +4,7 @@
                 <div class="kit-edm-tree-line kit-edm-tree-line-{{kitEdmNode.nodeType}}">
                     <div class="kit-edm-tree-line-start kit-edm-tree-line-start-{{kitEdmNode.nodeType}}">
                         {% if kitEdmNode.nodeType == 'directory' %}
-                            <img src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
+                            <img class="kit-edm-tree-line-directory-img-open" src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
                         {% endif %}
                         {% if kitEdmNode.url is defined %}
                             <a href="{{kitEdmNode.url}}">
