@@ -4,7 +4,7 @@
 #    requirements:
 #        parentNodeId: \d+
 
-kitpages_file_render:
+kitpages_edm_render:
     pattern:  /render/{entityFileName}
     defaults: { _controller: KitpagesFileBundle:Render:view, entityFileName:default }
 
