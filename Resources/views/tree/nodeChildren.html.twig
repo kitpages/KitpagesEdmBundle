@@ -4,7 +4,11 @@
                 <div class="kit-edm-tree-line kit-edm-tree-line-{{kitEdmNode.nodeType}}">
                     <div class="kit-edm-tree-line-start kit-edm-tree-line-start-{{kitEdmNode.nodeType}}">
                         {% if kitEdmNode.nodeType == 'directory' %}
-                            <img class="kit-edm-tree-line-directory-img-open" src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
+                            {% if kitEdmNode.children != null %}
+                                <img class="kit-edm-tree-line-directory-img-open" src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
+                            {% else %}
+                                <img class="kit-edm-tree-line-directory-img-close" src="{{asset('bundles/kitpagesedm/icon/close.png')}}" />
+                            {% endif %}
                         {% endif %}
                         {% if kitEdmNode.url is defined %}
                             <a href="{{kitEdmNode.url}}">

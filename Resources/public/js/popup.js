@@ -12,11 +12,17 @@ $(document).ready(function() {
 
         var popWidth = 500; //La première valeur du lien
 
+        $('#' + popID).remove();
+        var cloneForm = $('.' + popID).clone().prependTo('body');
+        $('body > .' + popID).attr('id', popID);
+
         //Faire apparaitre la pop-up et ajouter le bouton de fermeture
         $('#' + popID).fadeIn().css({
             'width': Number(popWidth)
         })
         .prepend('<a class="close">close</a>');
+
+
 
         //Récupération du margin, qui permettra de centrer la fenêtre - on ajuste de 80px en conformité avec le CSS
         var popMargTop = ($('#' + popID).height() + 80) / 2;
@@ -30,7 +36,6 @@ $(document).ready(function() {
 
         //Effet fade-in du fond opaque
         $('body').append('<div id="fade"></div>'); //Ajout du fond opaque noir
-        //Apparition du fond - .css({'filter' : 'alpha(opacity=80)'}) pour corriger les bogues de IE
         $('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
         return false;
     });

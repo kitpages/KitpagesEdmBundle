@@ -1,7 +1,7 @@
 <div class="kit-edm-tree">
 {% include 'KitpagesEdmBundle:Tree:nodeChildren.html.twig' with {'nodeChildren': nodeChildren } %}
 
-    <div id="kitpages_edmbundle_nodedirectoryform" class="popup_block">
+    <div class="kitpages_edmbundle_nodedirectoryform popup_block">
         <div class="kit-edm-tree-form-action-title">{{ "Add a directory" | trans }}</div>
         <form method="post" action="{{ path("kitpages_edm_add_directory", {kitpages_target: app.request.requestUri }) }}" {{ form_enctype(formDirectory) }}>
             {{ form_errors(formDirectory) }}
@@ -13,7 +13,7 @@
         </form>
     </div>
 
-    <div id="kitpages_edmbundle_nodefileform" class="popup_block">
+    <div class="kitpages_edmbundle_nodefileform popup_block">
         <div class="kit-edm-tree-form-action-title">{{ "Add a file" | trans }}</div>
         <form method="post" action="{{ path("kitpages_edm_add_file", {kitpages_target: app.request.requestUri }) }}" {{ form_enctype(formFile) }}>
             {{ form_errors(formFile) }}
@@ -25,7 +25,7 @@
         </form>
     </div>
 
-    <div id="kitpages_edmbundle_nodefileversionform" class="popup_block">
+    <div class="kitpages_edmbundle_nodefileversionform popup_block">
         <div class="kit-edm-tree-form-action-title">{{ "Add a new version" | trans }}</div>
         <form method="post" action="{{ path("kitpages_edm_add_file_version", {kitpages_target: app.request.requestUri }) }}" {{ form_enctype(formFileVersion) }}>
             {{ form_errors(formFileVersion) }}
