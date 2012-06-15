@@ -12,6 +12,7 @@ use Kitpages\UtilBundle\Service\Hash;
 use Kitpages\EdmBundle\Event\TreeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Kitpages\EdmBundle\KitpagesEdmEvents;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class NodeDirectoryFormHandler
 {
@@ -25,7 +26,8 @@ class NodeDirectoryFormHandler
         Request $request,
         TreeMap $treeMap,
         Hash $kitpagesUtilHash,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+        Translator $translator
     )
     {
         $this->doctrine = $doctrine;
@@ -33,6 +35,7 @@ class NodeDirectoryFormHandler
         $this->treeMap = $treeMap;
         $this->kitpagesUtilHash = $kitpagesUtilHash;
         $this->dispatcher = $dispatcher;
+        $this->translator = $translator;
     }
 
     public function process(Form $form, $entity)
@@ -70,9 +73,9 @@ class NodeDirectoryFormHandler
                     $event->setNode($entity);
                     $this->dispatcher->dispatch(KitpagesEdmEvents::afterCreateNodeDirectory, $event);
 
-                    $this->request->getSession()->setFlash('notice', 'Your directory is created');
+                    $this->request->getSession()->setFlash('notice', $this->translator->trans('Your directory is created'));
                 } else {
-                    $this->request->getSession()->setFlash("error", "technical error, not uploaded");
+                    $this->request->getSession()->setFlash("error", $this->translator->trans("technical error, not uploaded"));
                 }
                 return true;
             }

@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormError;
 use Kitpages\EdmBundle\Entity\Node;
 use Kitpages\EdmBundle\Service\TreeMap;
 use Kitpages\UtilBundle\Service\Hash;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class NodeFileFormHandler
 {
@@ -17,12 +18,19 @@ class NodeFileFormHandler
     protected $treeMap;
     protected $kitpagesUtilHash;
 
-    public function __construct(Registry $doctrine, Request $request, TreeMap $treeMap, Hash $kitpagesUtilHash)
+    public function __construct(
+        Registry $doctrine,
+        Request $request,
+        TreeMap $treeMap,
+        Hash $kitpagesUtilHash,
+        Translator $translator
+    )
     {
         $this->doctrine = $doctrine;
         $this->request = $request;
         $this->treeMap = $treeMap;
         $this->kitpagesUtilHash = $kitpagesUtilHash;
+        $this->translator = $translator;
     }
 
     public function process(Form $form, $entity)
@@ -62,9 +70,9 @@ class NodeFileFormHandler
                     $treeManager = $this->treeMap->getEdm($entity->getTreeId());
                     $treeManager->uploadFile($entity, $dataFile, $sendEmail);
 
-                    $this->request->getSession()->setFlash('notice', 'Your file is uploaded');
+                    $this->request->getSession()->setFlash('notice', $this->translator->trans('Your file is uploaded'));
                 } else {
-                    $this->request->getSession()->setFlash("error", "technical error, not uploaded");
+                    $this->request->getSession()->setFlash("error", $this->translator->trans("technical error, not uploaded"));
                 }
                 return true;
             }

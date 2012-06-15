@@ -8,6 +8,7 @@ use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Form\FormError;
 use Kitpages\EdmBundle\Entity\Node;
 use Kitpages\EdmBundle\Service\TreeMap;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class NodeFileVersionFormHandler
 {
@@ -15,11 +16,12 @@ class NodeFileVersionFormHandler
     protected $doctrine;
     protected $treeMap;
 
-    public function __construct(Registry $doctrine, Request $request, TreeMap $treeMap)
+    public function __construct(Registry $doctrine, Request $request, TreeMap $treeMap, Translator $translator)
     {
         $this->doctrine = $doctrine;
         $this->request = $request;
         $this->treeMap = $treeMap;
+        $this->translator = $translator;
     }
 
     public function process(Form $form)
@@ -39,7 +41,7 @@ class NodeFileVersionFormHandler
                 $treeManager = $this->treeMap->getEdm($node->getTreeId());
                 $treeManager->uploadFile($node, $form['fileUpload']->getData(), $sendEmail, $versionNote);
 
-                $this->request->getSession()->setFlash('notice', 'New version is uploaded');
+                $this->request->getSession()->setFlash('notice', $this->translator->trans('New version is uploaded'));
                 return true;
             }
             $this->request->getSession()->setFlash('error', $this->getRenderErrorMessages($form));
