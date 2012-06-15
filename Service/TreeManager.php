@@ -256,6 +256,9 @@ class TreeManager {
                             'type' => self::TYPE_ACTION_DISABLE_DIRECTORY,
                             'label' => $this->translator->trans('delete directory').' '.$node->getLabel(),
                             'classLink' => 'kit-edm-delete-node',
+                            'attr' => array(
+                                "data-kitpages-edm-confirm-delete" => $this->translator->trans("Do you confirm you want to delete directory %label%?", array('%label%' => $node->getLabel()))
+                            ),
                             'icon' => 'bundles/kitpagesedm/icon/disable-file.png',
                             'url' => $this->router->generate(
                                 'kitpages_edm_disable_node',
@@ -334,6 +337,9 @@ class TreeManager {
                 'type' => self::TYPE_ACTION_DISABLE_FILE,
                 'label' => $this->translator->trans('delete file').' '.$node->getLabel(),
                 'classLink' => 'kit-edm-delete-node',
+                'attr' => array(
+                    "data-kitpages-edm-confirm-delete" => $this->translator->trans("Do you confirm you want to delete file %label%?", array('%label%' => $node->getLabel()))
+                ),
                 'icon' => 'bundles/kitpagesedm/icon/disable-file.png',
                 'url' => $this->router->generate(
                     'kitpages_edm_disable_node',
