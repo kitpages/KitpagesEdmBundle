@@ -14,7 +14,7 @@ use Kitpages\EdmBundle\Entity\Node;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Kitpages\EdmBundle\Event\TreeEvent;
-
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Kitpages\EdmBundle\KitpagesEdmEvents;
 
 class TreeManager {
@@ -25,6 +25,7 @@ class TreeManager {
     protected $doctrine = null;
     protected $dispatcher = null;
     protected $router = null;
+    protected $translator = null;
     protected $treeId = null;
     protected $actionList = array();
 
@@ -43,12 +44,14 @@ class TreeManager {
         EventDispatcherInterface $dispatcher,
         RouterInterface $router,
         FileManager $fileManager,
+        Translator $translator,
         $idService
     )
     {
         $this->doctrine = $doctrine;
         $this->dispatcher = $dispatcher;
         $this->router = $router;
+        $this->translator = $translator;
         $this->fileManager = $fileManager;
         $this->treeId = str_replace('kitpages_edm.tree.', '', $idService);
 
@@ -213,9 +216,11 @@ class TreeManager {
                         );
                         $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_DELETE_DIRECTORY,
-                            'label' => 'delete directory '.$node->getLabel().' definitely!',
+                            'label' => $this->translator->trans('delete directory definitely'),
                             'classLink' => 'kit-edm-delete-node',
-                            'icon' => 'bundles/kitpagesedm/icon/delete-file.png',
+                            'attr' => array(
+                                "data-kitpages-edm-confirm-delete" => $this->translator->trans("Do you confirm you want to delete directory %label% definitely?", array('%label%' => $node->getLabel()))
+                            ),
                             'url' => $this->router->generate(
                                 'kitpages_edm_delete_node',
                                 array(
@@ -227,7 +232,7 @@ class TreeManager {
                     } else {
                         $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_ADD_DIRECTORY,
-                            'label' => 'Add a directory',
+                            'label' => $this->translator->trans('Add a directory'),
                             'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
                             'dataPopup' => array(
                                 'fieldName' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
@@ -237,7 +242,7 @@ class TreeManager {
                         );
                         $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_ADD_FILE,
-                            'label' => 'Add a file',
+                            'label' => $this->translator->trans('Add a file'),
                             'icon' => 'bundles/kitpagesedm/icon/add-file.png',
                             'dataPopup' => array(
                                 'fieldName' => 'kitpages_edmbundle_nodefileform_parent_id',
@@ -247,7 +252,7 @@ class TreeManager {
                         );
                         $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_DISABLE_DIRECTORY,
-                            'label' => 'delete directory '.$node->getLabel(),
+                            'label' => $this->translator->trans('delete directory').' '.$node->getLabel(),
                             'classLink' => 'kit-edm-delete-node',
                             'icon' => 'bundles/kitpagesedm/icon/disable-file.png',
                             'url' => $this->router->generate(
@@ -287,7 +292,7 @@ class TreeManager {
         if($nodeStatus == Node::NODE_STATUS_DISABLE ) {
             $actionList[] = array(
                 'type' => self::TYPE_ACTION_RETRIEVE_FILE,
-                'label' => 'undelete file',
+                'label' => $this->translator->trans('undelete file'),
                 'url' => $this->router->generate(
                     'kitpages_edm_retrieve_node',
                     array(
@@ -298,9 +303,11 @@ class TreeManager {
             );
             $actionList[] = array(
                 'type' => self::TYPE_ACTION_DELETE_FILE,
-                'label' => 'delete file '.$node->getLabel().' definitely!',
+                'label' => $this->translator->trans('delete file definitely'),
+                'attr' => array(
+                    "data-kitpages-edm-confirm-delete" => $this->translator->trans("Do you confirm you want to delete file %label% definitely?", array('%label%' => $node->getLabel()))
+                ),
                 'classLink' => 'kit-edm-delete-node',
-                'icon' => 'bundles/kitpagesedm/icon/delete-file.png',
                 'url' => $this->router->generate(
                     'kitpages_edm_delete_node',
                     array(
@@ -312,7 +319,7 @@ class TreeManager {
         } else {
             $actionList[] = array(
                 'type' => self::TYPE_ACTION_ADD_FILE_VERSION,
-                'label' => 'add version',
+                'label' => $this->translator->trans('Add a new version'),
                 'icon' => 'bundles/kitpagesedm/icon/add-file-version.png',
                 'dataPopup' => array(
                     'fieldName' => 'kitpages_edmbundle_nodefileversionform_node_id',
@@ -322,7 +329,7 @@ class TreeManager {
             );
             $actionList[] = array(
                 'type' => self::TYPE_ACTION_DISABLE_FILE,
-                'label' => 'delete file '.$node->getLabel(),
+                'label' => $this->translator->trans('delete file').' '.$node->getLabel(),
                 'classLink' => 'kit-edm-delete-node',
                 'icon' => 'bundles/kitpagesedm/icon/disable-file.png',
                 'url' => $this->router->generate(

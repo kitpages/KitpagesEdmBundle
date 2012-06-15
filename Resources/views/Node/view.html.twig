@@ -13,15 +13,22 @@
 <div class="kit-edm-node-view">
     <div class="kit-edm-node-view-title">
         {{node.label}}<br />
-        {{node.title}}
+
         <ul class="kit-edm-tree-actions kit-edm-menu">
         {% for kitEdmNodeAction in actionList %}
             <li class="{{kitEdmNodeAction.class|default()}}" >
                 {% if kitEdmNodeAction.dataPopup is defined %}
-                    <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}" rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}" title="{{kitEdmNodeAction.label}}">
-                {% else %}
-                    <a href="{{kitEdmNodeAction.url}}" class="{{kitEdmNodeAction.classLink|default()}}" title="{{kitEdmNodeAction.label}}">
-                {% endif %}
+                    <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}"
+                        {% if kitEdmNodeAction.attr is defined %}
+                            {% for attrKey, attrValue in kitEdmNodeAction.attr %}
+                                {{attrKey}}="{{attrValue}}"
+                            {% endfor %}
+                        {% endif %}
+                title="{{kitEdmNodeAction.label}}">
+                {#rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}"                #}
+                {#{% else %}#}
+                    {#<a href="{{kitEdmNodeAction.url}}" class="{{kitEdmNodeAction.classLink|default()}}" title="{{kitEdmNodeAction.label}}">#}
+                {#{% endif %}#}
                 {% if kitEdmNodeAction.icon is defined %}
                     <img src="{{asset(kitEdmNodeAction.icon)}}">
                 {% else %}
@@ -30,7 +37,7 @@
                     </a>
             </li>
         {% endfor %}
-            <li><a href="{{path ('kitpages_edm_render', {'id': node.file.id }) }}">Download</a></li>
+            <li><a href="{{path ('kitpages_edm_render', {'id': node.file.id }) }}">{{ "Download" | trans }}</a></li>
         </ul>
         <div style="clear:both" ></div>
     </div>

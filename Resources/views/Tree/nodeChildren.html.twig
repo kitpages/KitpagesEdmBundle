@@ -22,7 +22,7 @@
                     <ul class="kit-edm-tree-actions kit-edm-menu">
                     {% for kitEdmNodeAction in kitEdmNode.actionList %}
                         <li class="{{kitEdmNodeAction.class|default()}}" >
-                            {% if kitEdmNodeAction.dataPopup is defined %}
+                            {#{% if kitEdmNodeAction.dataPopup is defined %}#}
                                 <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}" rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}" title="{{kitEdmNodeAction.label}}">
                             {% else %}
                                 <a href="{{kitEdmNodeAction.url}}" class="{{kitEdmNodeAction.classLink|default()}}" title="{{kitEdmNodeAction.label}}">

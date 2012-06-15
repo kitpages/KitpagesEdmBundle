@@ -49,7 +49,7 @@ $(document).ready(function() {
     });
 
     $('.kit-edm-delete-node').click(function(e) {
-        var response = confirm("Do you confirm you want to " + $(this).attr('title') + " ?");
+        var response = confirm($('this').attr('data-kitpages-edm-confirm-delete'));
         if (!response) {
             e.preventDefault();
         }

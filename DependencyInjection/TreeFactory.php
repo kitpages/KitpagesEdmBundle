@@ -24,6 +24,7 @@ class TreeFactory
             ->addArgument(new Reference('event_dispatcher'))
             ->addArgument(new Reference('router'))
             ->addArgument(new Reference($config['kitpages_edm_filemanager_id']))
+            ->addArgument(new Reference('translator'))
             ->addArgument($id)
         ;
     }
