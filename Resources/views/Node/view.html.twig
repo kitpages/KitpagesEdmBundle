@@ -17,18 +17,16 @@
         <ul class="kit-edm-tree-actions kit-edm-menu">
         {% for kitEdmNodeAction in actionList %}
             <li class="{{kitEdmNodeAction.class|default()}}" >
-                {% if kitEdmNodeAction.dataPopup is defined %}
-                    <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}"
-                        {% if kitEdmNodeAction.attr is defined %}
-                            {% for attrKey, attrValue in kitEdmNodeAction.attr %}
-                                {{attrKey}}="{{attrValue}}"
-                            {% endfor %}
+                <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}"
+                    {% if kitEdmNodeAction.attr is defined %}
+                        {% for attrKey, attrValue in kitEdmNodeAction.attr %}
+                            {{attrKey}}="{{attrValue}}"
+                        {% endfor %}
+                        {% if !(kitEdmNodeAction.attr.title is defined) %}
+                            title="{{kitEdmNodeAction.label}}"
                         {% endif %}
-                title="{{kitEdmNodeAction.label}}">
-                {#rel="{{kitEdmNodeAction.dataPopup.rel}}" data-kitpages-edm-field-name="{{kitEdmNodeAction.dataPopup.fieldName}}"  data-kitpages-edm-field-value="{{kitEdmNodeAction.dataPopup.fieldValue}}"                #}
-                {#{% else %}#}
-                    {#<a href="{{kitEdmNodeAction.url}}" class="{{kitEdmNodeAction.classLink|default()}}" title="{{kitEdmNodeAction.label}}">#}
-                {#{% endif %}#}
+                    {% endif %}
+                >
                 {% if kitEdmNodeAction.icon is defined %}
                     <img src="{{asset(kitEdmNodeAction.icon)}}">
                 {% else %}

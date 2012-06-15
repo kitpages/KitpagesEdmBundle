@@ -234,9 +234,10 @@ class TreeManager {
                             'type' => self::TYPE_ACTION_ADD_DIRECTORY,
                             'label' => $this->translator->trans('Add a directory'),
                             'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
-                            'dataPopup' => array(
-                                'fieldName' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
-                                'fieldValue'=> $node->getId(),
+                            'classLink' => 'poplight',
+                            'attr' => array(
+                                'data-kitpages-edm-field-name' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
+                                'data-kitpages-edm-field-value'=> $node->getId(),
                                 'rel' => "kitpages_edmbundle_nodedirectoryform"
                             )
                         );
@@ -244,9 +245,10 @@ class TreeManager {
                             'type' => self::TYPE_ACTION_ADD_FILE,
                             'label' => $this->translator->trans('Add a file'),
                             'icon' => 'bundles/kitpagesedm/icon/add-file.png',
-                            'dataPopup' => array(
-                                'fieldName' => 'kitpages_edmbundle_nodefileform_parent_id',
-                                'fieldValue'=> $node->getId(),
+                            'classLink' => 'poplight',
+                            'attr' => array(
+                                'data-kitpages-edm-field-name' => 'kitpages_edmbundle_nodefileform_parent_id',
+                                'data-kitpages-edm-field-value'=> $node->getId(),
                                 'rel' => "kitpages_edmbundle_nodefileform"
                             )
                         );
@@ -321,9 +323,10 @@ class TreeManager {
                 'type' => self::TYPE_ACTION_ADD_FILE_VERSION,
                 'label' => $this->translator->trans('Add a new version'),
                 'icon' => 'bundles/kitpagesedm/icon/add-file-version.png',
-                'dataPopup' => array(
-                    'fieldName' => 'kitpages_edmbundle_nodefileversionform_node_id',
-                    'fieldValue'=> $node->getId(),
+                'classLink' => 'poplight',
+                'attr' => array(
+                    'data-kitpages-edm-field-name' => 'kitpages_edmbundle_nodefileversionform_node_id',
+                    'data-kitpages-edm-field-value'=> $node->getId(),
                     'rel' => "kitpages_edmbundle_nodefileversionform"
                 )
             );
