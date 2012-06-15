@@ -205,7 +205,7 @@ class TreeManager {
                     if($nodeStatus == Node::NODE_STATUS_DISABLE ) {
                         $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_RETRIEVE_DIRECTORY,
-                            'label' => 'undelete directory',
+                            'label' => $this->translator->trans("undelete directory"),
                             'url' => $this->router->generate(
                                 'kitpages_edm_retrieve_node',
                                 array(
