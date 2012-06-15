@@ -17,7 +17,7 @@
         <ul class="kit-edm-tree-actions kit-edm-menu">
         {% for kitEdmNodeAction in actionList %}
             <li class="{{kitEdmNodeAction.class|default()}}" >
-                <a href="#" class="poplight {{kitEdmNodeAction.classLink|default()}}"
+                <a href="{% if kitEdmNodeAction.url is defined %}{{kitEdmNodeAction.url}}{% else %}#{% endif %}" class="poplight {{kitEdmNodeAction.classLink|default()}}"
                     {% if kitEdmNodeAction.attr is defined %}
                         {% for attrKey, attrValue in kitEdmNodeAction.attr %}
                             {{attrKey}}="{{attrValue}}"

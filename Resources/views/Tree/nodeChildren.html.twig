@@ -22,7 +22,7 @@
                     <ul class="kit-edm-tree-actions kit-edm-menu">
                     {% for kitEdmNodeAction in kitEdmNode.actionList %}
                         <li class="{{kitEdmNodeAction.class|default()}}" >
-                            <a href="#" class="{{kitEdmNodeAction.classLink|default()}}"
+                            <a href="{% if kitEdmNodeAction.url is defined %}{{kitEdmNodeAction.url}}{% else %}#{% endif %}" class="{{kitEdmNodeAction.classLink|default()}}"
                                 {% if kitEdmNodeAction.attr is defined %}
                                     {% for attrKey, attrValue in kitEdmNodeAction.attr %}
                                         {{attrKey}}="{{attrValue}}"
