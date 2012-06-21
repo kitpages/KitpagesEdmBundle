@@ -172,4 +172,24 @@ class NodeController extends Controller
         return null;
     }
 
+    public function deleteOldFileVersionAction($nodeId){
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $node = $repositoryNode->find($nodeId);
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+
+        $nodeType = $node->getNodeType();
+
+        $treeManager->deleteOldFileVersion($node, true);
+        if ($nodeType == Node::NODE_TYPE_FILE) {
+            $this->get('request')->getSession()->setFlash('notice', 'Older versions of the file are deleted');
+        } elseif ($nodeType == Node::NODE_TYPE_DIRECTORY) {
+            $this->get('request')->getSession()->setFlash('notice', 'Older versions of files in the directory are deleted');
+        }
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+
+        return $this->redirect($target);
+    }
+
 }

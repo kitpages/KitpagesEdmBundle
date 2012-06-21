@@ -48,8 +48,8 @@ $(document).ready(function() {
         return false;
     });
 
-    $('.kit-edm-delete-node').click(function(e) {
-        var response = confirm($(this).attr('data-kitpages-edm-confirm-delete'));
+    $('.kit-edm-confirm').click(function(e) {
+        var response = confirm($(this).attr('data-kitpages-edm-confirm'));
         if (!response) {
             e.preventDefault();
         }

@@ -15,6 +15,9 @@ final class KitpagesEdmEvents
     const onDeleteNode = 'kitpages.edm.on_delete_node';
     const afterDeleteNode = 'kitpages.edm.after_delete_node';
 
+    const onDeleteOldFileVersion = 'kitpages.edm.on_delete_old_file_version';
+    const afterDeleteOldFileVersion = 'kitpages.edm.after_delete_old_file_version';
+
     const onModifyStatusNode = 'kitpages.edm.on_modify_status_node';
     const afterModifyStatusNode = 'kitpages.edm.after_modify_status_node';
 

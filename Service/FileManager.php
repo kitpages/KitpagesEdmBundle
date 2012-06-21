@@ -191,6 +191,15 @@ class FileManager {
             $this->deleteFile($file->getPreviousVersion());
         }
     }
+
+    public function deleteOldFileVersion($file)
+    {
+        $this->fileSystem->unlink(new AdapterFile($this->getFilePath($file)));
+        if ($file->getPreviousVersion() != null) {
+            $this->deleteFile($file->getPreviousVersion());
+        }
+    }
+
 //
 //    public function deleteTemp($itemCategory, $itemId, $entityFileName = 'default')
 //    {

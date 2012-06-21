@@ -22,7 +22,7 @@
                         {% for attrKey, attrValue in kitEdmNodeAction.attr %}
                             {{attrKey}}="{{attrValue}}"
                         {% endfor %}
-                        {% if !(kitEdmNodeAction.attr.title is defined) %}
+                        {% if (kitEdmNodeAction.attr.title is defined) == false %}
                             title="{{kitEdmNodeAction.label}}"
                         {% endif %}
                     {% endif %}
@@ -35,7 +35,6 @@
                     </a>
             </li>
         {% endfor %}
-            <li><a href="{{path ('kitpages_edm_render', {'id': node.file.id }) }}">{{ "Download" | trans }}</a></li>
         </ul>
         <div style="clear:both" ></div>
     </div>

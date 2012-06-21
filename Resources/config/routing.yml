@@ -26,6 +26,12 @@ kitpages_edm_view_node:
     requirements:
         nodeId: \d+
 
+kitpages_edm_delete_old_file_version:
+    pattern:  /deleteOldFileVersionFile/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:deleteOldFileVersion }
+    requirements:
+        nodeId: \d+
+
 kitpages_edm_disable_node:
     pattern:  /disableNode/{nodeId}
     defaults: { _controller: KitpagesEdmBundle:Node:disableNode }
