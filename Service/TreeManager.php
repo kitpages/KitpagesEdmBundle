@@ -453,17 +453,16 @@ class TreeManager {
         if (!$event->isDefaultPrevented()) {
             $nodeType = $node->getNodeType();
             $em = $this->doctrine->getEntityManager();
-            $em->remove($node);
-
             if ($nodeType == Node::NODE_TYPE_FILE) {
                 $this->fileManager->deleteFile($node->getFile());
             }
             if ($recursive && $nodeType == Node::NODE_TYPE_DIRECTORY) {
                 $nodeChildList = $em->getRepository('KitpagesEdmBundle:Node')->children($node, true);
                 foreach($nodeChildList as $nodeChild) {
-                    $this->deleteNode($nodeChild, false);
+                    $this->deleteNode($nodeChild, $recursive);
                 }
             }
+            $em->remove($node);
             $em->flush();
         }
         $this->dispatcher->dispatch(KitpagesEdmEvents::afterDeleteNode, $event);
