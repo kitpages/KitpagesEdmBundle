@@ -184,7 +184,7 @@ class FileManager {
         $em->flush();
     }
 
-    public function deleteFile($file)
+    public function deleteFile(File $file)
     {
         $this->fileSystem->unlink(new AdapterFile($this->getFilePath($file)));
         if ($file->getPreviousVersion() != null) {
@@ -192,11 +192,14 @@ class FileManager {
         }
     }
 
-    public function deleteOldFileVersion($file)
+    public function deleteOldFileVersion(File $file)
     {
-        $this->fileSystem->unlink(new AdapterFile($this->getFilePath($file)));
-        if ($file->getPreviousVersion() != null) {
-            $this->deleteFile($file->getPreviousVersion());
+        $previousVersion = $file->getPreviousVersion();
+        if ($previousVersion != null) {
+            $em = $this->doctrine->getEntityManager();
+            $em->remove($previousVersion);
+            $em->flush();
+            $this->deleteFile($previousVersion);
         }
     }
 
