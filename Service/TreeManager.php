@@ -357,17 +357,19 @@ class TreeManager {
                 )
             );
         } else {
-            $actionList[] = array(
-                'type' => self::TYPE_ACTION_DOWNLOAD_FILE,
-                'label' => $this->translator->trans('Download'),
-                'icon' => 'bundles/kitpagesedm/icon/download.png',
-                'url' => $this->router->generate(
-                    'kitpages_edm_render',
-                    array(
-                        'id' => $node->getFile()->getId()
+            if ($node->getFile() != null) {
+                $actionList[] = array(
+                    'type' => self::TYPE_ACTION_DOWNLOAD_FILE,
+                    'label' => $this->translator->trans('Download'),
+                    'icon' => 'bundles/kitpagesedm/icon/download.png',
+                    'url' => $this->router->generate(
+                        'kitpages_edm_render',
+                        array(
+                            'id' => $node->getFile()->getId()
+                        )
                     )
-                )
-            );
+                );
+            }
             $actionList[] = array(
                 'type' => self::TYPE_ACTION_ADD_FILE_VERSION,
                 'label' => $this->translator->trans('Add a new version'),

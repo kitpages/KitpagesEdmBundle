@@ -6,11 +6,11 @@
                         {% if kitEdmNode.nodeType == 'directory' %}
                             {% if kitEdmNode.children|length > 0 %}
                                 <a href="#"  class="kit-edm-tree-expanded-collapsed kit-edm-tree-expanded kit-edm-tree-hide" >
-                                    <img title="collapse" alt="expanded" src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
+                                    <img title="collapse" alt="expanded" src="{{asset('bundles/kitpagesedm/icon/close.png')}}" />
                                     <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
                                 </a>
                                 <a  href="#" class="kit-edm-tree-expanded-collapsed kit-edm-tree-collapsed " >
-                                    <img title="expand" alt="collapsed"  src="{{asset('bundles/kitpagesedm/icon/close.png')}}" />
+                                    <img title="expand" alt="collapsed"  src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
                                     <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
                                 </a>
                             {% else %}

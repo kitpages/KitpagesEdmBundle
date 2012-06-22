@@ -41,10 +41,10 @@
     </div>
 <script>
     $(document).ready(function() {
-        treeExpandAll($('#{{treeId}}'));
-        for (var i=1; i<={{openTreeLevel}}; i++) {
+        treeCollapseAll($('#{{treeId}}'));
+        for (var i=0; i<={{openTreeLevel}}; i++) {
             $('#{{treeId}} .kit-edm-tree-level-' + i +' .kit-edm-tree-expanded-collapsed').each(function(index) {
-                nodeToggle($(this));
+                nodeExpand($(this));
             });
         }
         $('#{{treeId}}').show();
