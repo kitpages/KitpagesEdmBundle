@@ -30,8 +30,10 @@ $(document).ready(function() {
     });
     $('.kit-edm-tree').delegate('.kit-edm-tree-expanded', 'click', function(event){
         nodeExpand($(this));
+        return false;
     })
     $('.kit-edm-tree').delegate('.kit-edm-tree-collapsed', 'click', function(event){
         nodeCollapse($(this));
+        return false;
     })
 });
