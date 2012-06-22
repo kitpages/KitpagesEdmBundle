@@ -1,23 +1,33 @@
-    <ul class="kit-edm-tree-node-container">
+    <ul class="kit-edm-tree-node-container kit-edm-tree-level-{{treeLevel}}">
         {% for kitEdmNode in nodeChildren %}
             <li class="kit-edm-tree-node {{kitEdmNode.class|default()}}">
                 <div class="kit-edm-tree-line kit-edm-tree-line-{{kitEdmNode.nodeType}}">
                     <div class="kit-edm-tree-line-start kit-edm-tree-line-start-{{kitEdmNode.nodeType}}">
                         {% if kitEdmNode.nodeType == 'directory' %}
-                            {% if kitEdmNode.children != null %}
-                                <img class="kit-edm-tree-line-directory-img-open" src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
+                            {% if kitEdmNode.children|length > 0 %}
+                                <a href="#"  class="kit-edm-tree-expanded-collapsed kit-edm-tree-expanded kit-edm-tree-hide" >
+                                    <img title="collapse" alt="expanded" src="{{asset('bundles/kitpagesedm/icon/open.png')}}" />
+                                    <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
+                                </a>
+                                <a  href="#" class="kit-edm-tree-expanded-collapsed kit-edm-tree-collapsed " >
+                                    <img title="expand" alt="collapsed"  src="{{asset('bundles/kitpagesedm/icon/close.png')}}" />
+                                    <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
+                                </a>
                             {% else %}
-                                <img class="kit-edm-tree-line-directory-img-close" src="{{asset('bundles/kitpagesedm/icon/close.png')}}" />
+                                <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
                             {% endif %}
-                        {% endif %}
-                        {% if kitEdmNode.url is defined %}
-                            <a href="{{kitEdmNode.url}}" {% if kitEdmNode.title != null %}title="{{kitEdmNode.title}}"{% endif %} >
-                        {% endif %}
-                            <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
-                            <span class="kit-edm-tree-page-title">{{kitEdmNode.label|raw}}</span>
-                        {% if kitEdmNode.url is defined %}
-                            </a>
-                        {% endif %}
+                                
+                                <span class="kit-edm-tree-page-title">{{kitEdmNode.label|raw}}</span>
+                        {% else %}
+                            {% if kitEdmNode.url is defined %}
+                                <a href="{{kitEdmNode.url}}" {% if kitEdmNode.title != null %}title="{{kitEdmNode.title}}"{% endif %} >
+                            {% endif %}
+                                <img src="{{asset('bundles/kitpagesedm/icon/' ~ kitEdmNode.nodeType ~ '.png')}}" />
+                                <span class="kit-edm-tree-page-title">{{kitEdmNode.label|raw}}</span>
+                            {% if kitEdmNode.url is defined %}
+                                </a>
+                            {% endif %}
+                        {% endif %}                         
                     </div>
                     <ul class="kit-edm-tree-actions kit-edm-menu">
                     {% for kitEdmNodeAction in kitEdmNode.actionList %}
@@ -47,7 +57,8 @@
                 </div>
                 <div style="clear:both" ></div>
                 <div class="kit-edm-tree-state-node">
-                    {% include 'KitpagesEdmBundle:Tree:nodeChildren.html.twig' with {'nodeChildren': kitEdmNode.children } %}
+                    {% set treeLevel = treeLevel + 1 %}
+                    {% include 'KitpagesEdmBundle:Tree:nodeChildren.html.twig' with {'nodeChildren': kitEdmNode.children, 'treeLevel': treeLevel  } %}
                 </div>
             </li>
         {% endfor %}

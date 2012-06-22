@@ -4,6 +4,7 @@
 #    requirements:
 #        parentNodeId: \d+
 
+
 kitpages_edm_render:
     pattern:  /render
     defaults: { _controller: KitpagesEdmBundle:Node:renderFile }
@@ -47,5 +48,12 @@ kitpages_edm_retrieve_node:
 kitpages_edm_delete_node:
     pattern:  /deleteNode/{nodeId}
     defaults: { _controller: KitpagesEdmBundle:Node:deleteNode }
+    requirements:
+        nodeId: \d+
+
+
+kitpages_edm_export_node:
+    pattern:  /export/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:export }
     requirements:
         nodeId: \d+

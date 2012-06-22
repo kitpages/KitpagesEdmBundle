@@ -45,6 +45,10 @@ class Configuration implements ConfigurationInterface
                                     ->defaultValue('%kernel.root_dir%/data/tmp/bundle/kitpagesedm')
                                     ->cannotBeEmpty()
                                 ->end()
+                                ->scalarNode('version_number_to_keep')
+                                    ->defaultValue('all')
+                                    ->cannotBeEmpty()
+                                ->end()
                             ->end()
         ;
     }

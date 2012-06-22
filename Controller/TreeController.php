@@ -15,7 +15,9 @@ class TreeController extends Controller
     public function widgetNodeTreeAction(
         $nodeId,
         $user = array(),
-        $actionList = array()
+        $actionList = array(),
+        $openTreeLevel = 0,
+        $treeId = null
     )
     {
 
@@ -52,12 +54,19 @@ class TreeController extends Controller
         $formFileVersion   = $this->createForm(new NodeFileVersionForm());
         $nodeList = $treeManager->nodeInTree($node, null, $this->get('request')->getPathInfo());
 
+        if ($treeId == null) {
+            $treeId = "kit-edm-tree-".$nodeId;
+        }
+
         return $this->render('KitpagesEdmBundle:Tree:nodeTree.html.twig', array(
             'nodeChildren' => array($nodeList),
             'formDirectory'   => $formDirectory->createView(),
             'formFile'   => $formFile->createView(),
             'formFileVersion'   => $formFileVersion->createView(),
-            'node' => $node
+            'node' => $node,
+            'treeId' => $treeId,
+            'openTreeLevel' => $openTreeLevel
+
         ));
     }
 }

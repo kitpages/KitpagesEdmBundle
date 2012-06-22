@@ -55,4 +55,12 @@ $(document).ready(function() {
         }
     });
 
+    $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').live('click', function(e) {
+        $(this).addClass('kit-edm-tree-form-load');
+        $(this).html('');
+    });
+    $('.kitpages_edmbundle_nodefileform button[type="submit"]').live('click', function(e) {
+        $(this).addClass('kit-edm-tree-form-load');
+        $(this).html('');
+    });
 });

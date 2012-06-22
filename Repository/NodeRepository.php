@@ -76,4 +76,21 @@ class NodeRepository extends NestedTreeRepository
 
     }
 
+    public function getChildrenNoDisable($node)
+    {
+        $nodeList = $this->_em
+            ->createQuery("
+                SELECT n
+                FROM KitpagesEdmBundle:Node n
+                WHERE n.right < :right
+                  AND n.left > :left
+                  AND n.status is null
+                ORDER BY n.left
+              ")
+            ->setParameter("right", $node->getRight())
+            ->setParameter("left", $node->getLeft())
+            ->getResult();
+        return $nodeList;
+    }
+
 }

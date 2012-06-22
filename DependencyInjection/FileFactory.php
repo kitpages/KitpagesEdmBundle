@@ -25,6 +25,7 @@ class FileFactory
             ->addArgument(new Reference('router'))
             ->addArgument(new Reference('kitpages_file_system.file_system.'.$config['kitpages_file_system_id']))
             ->addArgument($config['tmp_dir'])
+            ->addArgument($config['version_number_to_keep'])
         ;
     }
 

@@ -29,7 +29,8 @@ class FileManager {
         EventDispatcherInterface $dispatcher,
         RouterInterface $router,
         AdapterInterface $fileSystem,
-        $tmp_dir
+        $tmp_dir,
+        $versionNumberToKeep
     )
     {
         $this->dispatcher = $dispatcher;
@@ -37,6 +38,7 @@ class FileManager {
         $this->router = $router;
         $this->fileSystem = $fileSystem;
         $this->tmpDir = $tmp_dir;
+        $this->versionNumberToKeep = $versionNumberToKeep;
 
         if (!is_dir($this->tmpDir)) {
             mkdir($this->tmpDir, 0700, true);
@@ -140,8 +142,8 @@ class FileManager {
         $oldVersionFile->setStatus(File::FILE_STATUS_OLD_VERSION);
 
         $em = $this->doctrine->getEntityManager();
-        $em->persist($file);
         $em->persist($oldVersionFile);
+        $em->persist($file);
         $em->flush();
 
         $tempFilePath = tempnam($this->tmpDir, $file->getId());
@@ -160,8 +162,18 @@ class FileManager {
             $file->setHasUploadFailed(true);
         }
         unlink($tempFilePath);
-        $em->flush();
 
+        $em->flush();
+        $em->refresh($file);
+        if ($this->versionNumberToKeep != 'all') {
+            try{
+                $versionOriginal = $em->getRepository('KitpagesEdmBundle:File')->getVersionFile($file, $this->versionNumberToKeep);
+                $this->newOriginalVersion($versionOriginal, $versionOriginal->getNextVersion());
+                $this->deleteOldFileVersion($versionOriginal);
+            } catch (\Exception $e) {
+
+            }
+        }
         return $file;
     }
 
@@ -184,6 +196,18 @@ class FileManager {
         $em->flush();
     }
 
+    public function newOriginalVersion(File $fileOriginal, $file)
+    {
+
+        if ($file != null) {
+            $em = $this->doctrine->getEntityManager();
+            $file->setOriginalVersion($fileOriginal);
+            $em->persist($file);
+            $em->flush();
+            $this->newOriginalVersion($fileOriginal, $file->getNextVersion());
+        }
+    }
+
     public function deleteFile(File $file)
     {
         $this->fileSystem->unlink(new AdapterFile($this->getFilePath($file)));
@@ -203,20 +227,9 @@ class FileManager {
         }
     }
 
-//
-//    public function deleteTemp($itemCategory, $itemId, $entityFileName = 'default')
-//    {
-//        $em = $this->getDoctrine()->getEntityManager();
-//        $fileClass = $this->getFileClass($entityFileName);
-//        $fileList = $em->getRepository($fileClass)->findByStatusAndItem(
-//            FileInterface::STATUS_TEMP,
-//            $itemCategory,
-//            $itemId
-//        );
-//        foreach($fileList as $file) {
-//            $this->delete($file);
-//        }
-//    }
-//
+    public function getFileContent(File $file)
+    {
+        return $this->fileSystem->getFileContent(new AdapterFile($this->getFilePath($file)));
+    }
 
 }

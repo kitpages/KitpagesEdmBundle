@@ -132,6 +132,23 @@ class NodeController extends Controller
         return $this->redirect($target);
     }
 
+    public function exportAction($nodeId)
+    {
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $node = $repositoryNode->find($nodeId);
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+
+        try {
+            $filePathExport = $treeManager->export($node, null, true);
+            $this->get('kitpages.util')->getFile($filePathExport, 0, null, $node->getLabel().'-'.date('Y-m-d').'.zip');
+        } catch (\Exception $e) {
+
+        }
+        return null;
+    }
+
     public function deleteNodeAction($nodeId)
     {
         $em = $this->get('doctrine')->getEntityManager();

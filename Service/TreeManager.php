@@ -238,6 +238,17 @@ class TreeManager {
                         );
                     } else {
                         $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_DOWNLOAD_DIRECTORY,
+                            'label' => $this->translator->trans('Download'),
+                            'icon' => 'bundles/kitpagesedm/icon/download.png',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_export_node',
+                                array(
+                                    'nodeId' => $node->getId()
+                                )
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_ADD_DIRECTORY,
                             'label' => $this->translator->trans('Add a directory'),
                             'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
@@ -527,7 +538,38 @@ class TreeManager {
         return $action;
     }
 
+    public function export($node) {
+        $zip = new \ZipArchive();
+        $filename = tempnam($this->fileManager->tmpDir, $node->getId());
+        if ($zip->open($filename, \ZIPARCHIVE::OVERWRITE )!==TRUE) {
+            //error
+        }
+        $this->addNodeExport($zip, $node, true);
+        $zip->close();
+        if ($zip->status != 0) {
+            throw new \Exception('Zip no create');
+        }
+        return $filename;
+    }
+
+    public function addNodeExport($zip, $node, $recursive, $dir = '')
+    {
+
+        $nodeType = $node->getNodeType();
+        $em = $this->doctrine->getEntityManager();
+        if ($nodeType == Node::NODE_TYPE_FILE) {
+            $zip->addFromString($dir . $node->getLabel(), $this->fileManager->getFileContent($node->getFile()));
+        }
+        if ($recursive && $nodeType == Node::NODE_TYPE_DIRECTORY) {
+            $zip->addEmptyDir($node->getLabel());
+            $dir = $dir . $node->getLabel().'/';
+            $nodeChildList = $em->getRepository('KitpagesEdmBundle:Node')->getChildrenNoDisable($node);
+            foreach($nodeChildList as $nodeChild) {
+                $this->addNodeExport($zip, $nodeChild, $recursive, $dir);
+            }
+        }
 
 
+    }
 
 }

@@ -12,6 +12,7 @@
 .kit-edm-tree {
     position: relative;
     background-color: #FFF;
+    display: none;
 }
 .kit-edm-tree > .kit-edm-tree-node-container:first-child {
     margin: 0px;
@@ -54,3 +55,15 @@
     display:inline-block;
 }
 
+.kit-edm-tree-form-load{
+    height:32px;
+    width:32px;
+    border:none;
+    background-image: url('../img/load.gif');
+    background-repeat: no-repeat;
+    background-position: center top;
+}
+
+.kit-edm-tree .kit-edm-tree-line-start a {
+    text-decoration: none;
+}
