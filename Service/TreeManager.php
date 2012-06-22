@@ -34,7 +34,7 @@ class TreeManager {
     CONST TYPE_ACTION_ADD_FILE_VERSION = "addFileVersion";
     CONST TYPE_ACTION_DELETE_OLD_FILE_VERSION = "deleteOldFileVersion";
     CONST TYPE_ACTION_DOWNLOAD_FILE = "downloadFile";
-    CONST TYPE_ACTION_DOWNLOAD_DIRECTORY = "downloadFile";
+    CONST TYPE_ACTION_DOWNLOAD_DIRECTORY = "downloadDirectory";
     CONST TYPE_ACTION_DISABLE_FILE = "disableFile";
     CONST TYPE_ACTION_DISABLE_DIRECTORY = "disableDirectory";
     CONST TYPE_ACTION_RETRIEVE_DIRECTORY = "retrieveDirectory";
