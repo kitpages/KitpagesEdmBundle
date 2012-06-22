@@ -42,8 +42,8 @@
 <script>
     $(document).ready(function() {
         treeCollapseAll($('#{{treeId}}'));
-        for (var i=0; i<={{openTreeLevel}}; i++) {
-            $('#{{treeId}} .kit-edm-tree-level-' + i +' .kit-edm-tree-expanded-collapsed').each(function(index) {
+        for (var i=0; i<{{openTreeLevel}}; i++) {
+            $('#{{treeId}} .kit-edm-tree-level-' + i +' > .kit-edm-tree-node > .kit-edm-tree-line .kit-edm-tree-expanded').each(function(index) {
                 nodeExpand($(this));
             });
         }
