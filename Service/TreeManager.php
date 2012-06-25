@@ -135,10 +135,6 @@ class TreeManager {
         );
         $event->set('versionNote', $versionNote);
 
-        // send on event
-        $eventMail = clone $event;
-        $eventMail->set('sendEmail', $sendEmail);
-
         $em = $this->doctrine->getEntityManager();
         $oldVersionFile = $node->getFile();
         if ($oldVersionFile == null) {

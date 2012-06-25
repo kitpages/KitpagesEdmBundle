@@ -37,6 +37,11 @@ $(document).ready(function() {
         //Effet fade-in du fond opaque
         $('body').append('<div id="fade"></div>'); //Ajout du fond opaque noir
         $('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
+
+
+        //selection premier input
+        $('#' + popID + ' form div:first input').focus();
+
         return false;
     });
 
