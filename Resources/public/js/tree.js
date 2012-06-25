@@ -56,4 +56,15 @@ $(document).ready(function() {
         });
         return false;
     })
+    $('.kit-edm-action-url').click(function(e) {
+        $.ajax({
+          url: $(this).attr('data-edm-tree-action-url'),
+          success: function(){
+          }
+        });
+    });
+    $('.kit-edm-expand').click(function(e) {
+        $(this).parent().parent().parent().find('.kit-edm-tree-expanded').trigger('click');
+        e.preventDefault();
+    });
 });

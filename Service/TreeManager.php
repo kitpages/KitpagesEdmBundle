@@ -248,10 +248,18 @@ class TreeManager {
                             'type' => self::TYPE_ACTION_ADD_DIRECTORY,
                             'label' => $this->translator->trans('Add a directory'),
                             'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
-                            'classLink' => 'poplight',
+                            'classLink' => 'poplight kit-edm-expand',
                             'attr' => array(
                                 'data-kitpages-edm-field-name' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
                                 'data-kitpages-edm-field-value'=> $node->getId(),
+//                                'data-edm-tree-action-url' => $this->router->generate(
+//                                    'kitpages_edm_userpreference_tree',
+//                                    array(
+//                                        'id' => $node->getId(),
+//                                        'action' => 'expand',
+//                                        'scope' => 'node'
+//                                    )
+//                                ),
                                 'rel' => "kitpages_edmbundle_nodedirectoryform"
                             )
                         );
@@ -259,10 +267,18 @@ class TreeManager {
                             'type' => self::TYPE_ACTION_ADD_FILE,
                             'label' => $this->translator->trans('Add a file'),
                             'icon' => 'bundles/kitpagesedm/icon/add-file.png',
-                            'classLink' => 'poplight',
+                            'classLink' => 'poplight kit-edm-expand',
                             'attr' => array(
                                 'data-kitpages-edm-field-name' => 'kitpages_edmbundle_nodefileform_parent_id',
                                 'data-kitpages-edm-field-value'=> $node->getId(),
+//                                'data-edm-tree-action-url' => $this->router->generate(
+//                                    'kitpages_edm_userpreference_tree',
+//                                    array(
+//                                        'id' => $node->getId(),
+//                                        'action' => 'expand',
+//                                        'scope' => 'node'
+//                                    )
+//                                ),
                                 'rel' => "kitpages_edmbundle_nodefileform"
                             )
                         );
