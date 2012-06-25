@@ -1,6 +1,6 @@
 <div class="kit-edm-tree" id="{{treeId}}">
-    <img class="kit-edm-tree-collapse-all" src="{{asset("bundles/kitpagescms/icon/collapse_all.gif")}}"  />
-    <img class="kit-edm-tree-expand-all" src="{{asset("bundles/kitpagescms/icon/expand_all.gif")}}"  />
+    <img class="kit-edm-tree-collapse-all" src="{{asset("bundles/kitpagescms/icon/collapse_all.gif")}}"  data-edm-tree-action-url="{{ path('kitpages_edm_userpreference_tree', { 'id' : nodeChildren.0.id, 'action': 'collapse', 'scope': 'nodeAndChildren' }) }}" />
+    <img class="kit-edm-tree-expand-all" src="{{asset("bundles/kitpagescms/icon/expand_all.gif")}}" data-edm-tree-action-url="{{ path('kitpages_edm_userpreference_tree', { 'id' : nodeChildren.0.id, 'action': 'expand', 'scope': 'nodeAndChildren' }) }}"  />
 
     {% include 'KitpagesEdmBundle:Tree:nodeChildren.html.twig' with {'nodeChildren': nodeChildren, 'treeLevel': 0 } %}
 
@@ -41,12 +41,12 @@
     </div>
 <script>
     $(document).ready(function() {
-        treeCollapseAll($('#{{treeId}}'));
-        for (var i=0; i<{{openTreeLevel}}; i++) {
-            $('#{{treeId}} .kit-edm-tree-level-' + i +' > .kit-edm-tree-node > .kit-edm-tree-line .kit-edm-tree-expanded').each(function(index) {
-                nodeExpand($(this));
-            });
-        }
+        {#treeCollapseAll($('#{{treeId}}'));#}
+        {#for (var i=0; i<{{openTreeLevel}}; i++) {#}
+            {#$('#{{treeId}} .kit-edm-tree-level-' + i +' > .kit-edm-tree-node > .kit-edm-tree-line .kit-edm-tree-expanded').each(function(index) {#}
+                {#nodeExpand($(this));#}
+            {#});#}
+        {#}#}
         $('#{{treeId}}').show();
     });
 </script>

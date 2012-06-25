@@ -7,6 +7,7 @@
     <parameters>
         <parameter key="kitpages_edm.treeManager.class">Kitpages\EdmBundle\Service\TreeManager</parameter>
         <parameter key="kitpages_edm.fileManager.class">Kitpages\EdmBundle\Service\FileManager</parameter>
+        <parameter key="kitpages_edm.userPreferenceManager">Kitpages\EdmBundle\Service\UserPreferenceManager</parameter>
     </parameters>
 
     <services>
@@ -37,6 +38,9 @@
             <argument type="service" id="request" strict="false" />
             <argument type="service" id="kitpages_edm.tree_map" />
             <argument type="service" id="translator" />
+        </service>
+        <service id="kitpages.edm.manager.userPreference" class="%kitpages_edm.userPreferenceManager%">
+            <argument type="service" id="doctrine"/>
         </service>
     </services>
 </container>

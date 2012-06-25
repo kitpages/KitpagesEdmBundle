@@ -57,3 +57,7 @@ kitpages_edm_export_node:
     defaults: { _controller: KitpagesEdmBundle:Node:export }
     requirements:
         nodeId: \d+
+
+kitpages_edm_userpreference_tree:
+    pattern:  /userPreference/tree
+    defaults: { _controller: KitpagesEdmBundle:Tree:saveUserPreferenceTree }

@@ -62,7 +62,6 @@ class NodeFileFormHandler
                     $nodeParent = $repositoryNode->find($parent_id);
                     $entity->setParent($nodeParent);
                     $entity->setNodeType(Node::NODE_TYPE_FILE);
-                    $entity->setLabel('label temp');
                     $em->persist($entity);
                     $em->flush();
                     $em->refresh($entity);

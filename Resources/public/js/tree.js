@@ -23,17 +23,37 @@ var treeCollapseAll = function (tree) {
 $(document).ready(function() {
     $('.kit-edm-tree-hide').hide();
     $('.kit-edm-tree-collapse-all').click(function(){
-       treeCollapseAll($(this).parent());
+        treeCollapseAll($(this).parent());
+        $.ajax({
+          url: $(this).attr('data-edm-tree-action-url'),
+          success: function(){
+          }
+        });
     });
     $('.kit-edm-tree-expand-all').click(function(){
-       treeExpandAll($(this).parent());
+        treeExpandAll($(this).parent());
+        $.ajax({
+          url: $(this).attr('data-edm-tree-action-url'),
+          success: function(){
+          }
+        });
     });
     $('.kit-edm-tree').delegate('.kit-edm-tree-expanded', 'click', function(event){
         nodeExpand($(this));
+        $.ajax({
+          url: $(this).attr('data-edm-tree-action-url'),
+          success: function(){
+          }
+        });
         return false;
     })
     $('.kit-edm-tree').delegate('.kit-edm-tree-collapsed', 'click', function(event){
         nodeCollapse($(this));
+        $.ajax({
+          url: $(this).attr('data-edm-tree-action-url'),
+          success: function(){
+          }
+        });
         return false;
     })
 });

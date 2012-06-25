@@ -6,6 +6,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
 use Symfony\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\NotNullValidator;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\FileValidator;
+use Symfony\Component\Form\CallbackValidator;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormError;
 
 class NodeFileForm extends AbstractType
 {
@@ -73,10 +80,19 @@ class NodeFileForm extends AbstractType
             'file',
             array(
                 "label" => "File",
-                'required' => false,
                 'property_path' => false
             )
         );
+
+        $builder->addValidator(new CallbackValidator(function(FormInterface $form) {
+            $fieldFileUpload = $form->get('fileUpload');
+            $validator      = new NotNullValidator();
+            $constraint     = new NotNull();
+            $isValid = $validator->isValid( $fieldFileUpload->getData(), $constraint );
+            if ( ! $isValid ) {
+                $fieldFileUpload->addError( new FormError( "You did not select a file." ) );
+            }
+        }));
 
         $builder->add(
             'Title',

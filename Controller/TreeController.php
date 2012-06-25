@@ -8,6 +8,7 @@ use Kitpages\EdmBundle\Entity\Node;
 use Kitpages\EdmBundle\Form\NodeDirectoryForm;
 use Kitpages\EdmBundle\Form\NodeFileForm;
 use Kitpages\EdmBundle\Form\NodeFileVersionForm;
+use Symfony\Component\HttpFoundation\Response;
 
 class TreeController extends Controller
 {
@@ -17,10 +18,9 @@ class TreeController extends Controller
         $user = array(),
         $actionList = array(),
         $openTreeLevel = 0,
-        $treeId = null
+        $htmlTreeId = null
     )
     {
-
 
         $user = array_merge(
             array(
@@ -54,9 +54,12 @@ class TreeController extends Controller
         $formFileVersion   = $this->createForm(new NodeFileVersionForm());
         $nodeList = $treeManager->nodeInTree($node, null, $this->get('request')->getPathInfo());
 
-        if ($treeId == null) {
-            $treeId = "kit-edm-tree-".$nodeId;
+        if ($htmlTreeId == null) {
+            $htmlTreeId = "kit-edm-tree-".$nodeId;
         }
+
+        $userPreferenceManager = $this->get('kitpages.edm.manager.userPreference');
+        $userPreference = $userPreferenceManager->getPreference($node->getTreeId(), $user['name']);
 
         return $this->render('KitpagesEdmBundle:Tree:nodeTree.html.twig', array(
             'nodeChildren' => array($nodeList),
@@ -64,9 +67,28 @@ class TreeController extends Controller
             'formFile'   => $formFile->createView(),
             'formFileVersion'   => $formFileVersion->createView(),
             'node' => $node,
-            'treeId' => $treeId,
-            'openTreeLevel' => $openTreeLevel
-
+            'treeId' => $htmlTreeId,
+            'openTreeLevel' => $openTreeLevel,
+            'kitEdmUserPreferenceTree' => $userPreference->getDataTree()
         ));
     }
+
+    public function saveUserPreferenceTreeAction(){
+        $userPreferenceManager = $this->get('kitpages.edm.manager.userPreference');
+        $request = $this->getRequest();
+
+        $nodeId = $request->query->get("id", null);
+        $actionTree = $request->query->get("action", null);
+        $scopeTree = $request->query->get("scope", null);
+
+        $userPreferenceManager->setPreferenceDataTreeState(
+            $this->get('security.context')->getToken()->getUserName(),
+            $nodeId,
+            $actionTree,
+            $scopeTree
+        );
+
+        return new Response(null);
+    }
+
 }

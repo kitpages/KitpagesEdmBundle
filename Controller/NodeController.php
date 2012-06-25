@@ -61,7 +61,7 @@ class NodeController extends Controller
     {
 
         $entity = new Node();
-
+        $entity->setLabel('label temp');
         // build basic form
         $form   = $this->createForm(new NodeFileForm(), $entity);
 

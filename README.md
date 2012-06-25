@@ -80,7 +80,7 @@ Add the following code into the pages where the tree is displayed
         'user': {'id': user.id, 'name': user.username, 'email': user.email},
         'actionList': listAction,
         'openTreeLevel': 0,
-        'treeId': 'super_tree'
+        'htmlTreeId': 'super_tree'
     } %}
 
 treeId is optional and openTreeLevel is equal to 0 by default
