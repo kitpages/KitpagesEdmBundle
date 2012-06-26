@@ -67,3 +67,7 @@
 .kit-edm-tree .kit-edm-tree-line-start a {
     text-decoration: none;
 }
+
+.kit-edm-tree-expanded-collapsed:hover {
+    background-color: #f2f279;
+}
