@@ -29,10 +29,18 @@ class NodeController extends Controller
 
             $formFileVersion   = $this->createForm(new NodeFileVersionForm());
 
+            $kitpages_target = $this->get('router')->generate(
+                'kitpages_edm_view_node',
+                array(
+                    'nodeId' => $node->getId(),
+                    'kitpages_target' => $target
+                )
+            );
+
             return $this->render('KitpagesEdmBundle:Node:view.html.twig', array(
                 'node' => $node,
                 'formFileVersion'   => $formFileVersion->createView(),
-                'actionList' => $treeManager->nodeFileDetailActionList($node, array(), $target)
+                'actionList' => $treeManager->nodeFileDetailActionList($node, array(), $kitpages_target)
             ));
         } else {
             return $this->redirect($target);
