@@ -58,8 +58,11 @@ Let's see the configuration in config.yml
         tree_list:
             interne:
                 kitpages_file_system_id: kitsiteTest
+                tmp_dir: %kernel.root_dir%/data/tmp
+                version_number_to_keep: 3
             client:
                 kitpages_file_system_id: kitpagesAmazon
+                tmp_dir: %kernel.root_dir%/data/tmp
 
 
 Usage example

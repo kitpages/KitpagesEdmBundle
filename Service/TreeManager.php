@@ -240,7 +240,8 @@ class TreeManager {
                             'url' => $this->router->generate(
                                 'kitpages_edm_export_node',
                                 array(
-                                    'nodeId' => $node->getId()
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
                                 )
                             )
                         );
@@ -377,7 +378,8 @@ class TreeManager {
                     'url' => $this->router->generate(
                         'kitpages_edm_render',
                         array(
-                            'id' => $node->getFile()->getId()
+                            'id' => $node->getFile()->getId(),
+                            'kitpages_target' => $kitpages_target
                         )
                     )
                 );
@@ -572,12 +574,14 @@ class TreeManager {
         $nodeType = $node->getNodeType();
         $em = $this->doctrine->getEntityManager();
         if ($nodeType == Node::NODE_TYPE_FILE) {
-            $zip->addFromString($dir . $node->getLabel(), $this->fileManager->getFileContent($node->getFile()));
+            $zip->addFromString(iconv('UTF-8', 'IBM850', $dir . $node->getLabel()), $this->fileManager->getFileContent($node->getFile()));
         }
         if ($recursive && $nodeType == Node::NODE_TYPE_DIRECTORY) {
-            $zip->addEmptyDir($node->getLabel());
+            $zip->addEmptyDir(iconv('UTF-8', 'IBM850', $dir . $node->getLabel()));
+
+            //$zip->addEmptyDir($dir . $node->getLabel());
             $dir = $dir . $node->getLabel().'/';
-            $nodeChildList = $em->getRepository('KitpagesEdmBundle:Node')->getChildrenNoDisable($node);
+            $nodeChildList = $em->getRepository('KitpagesEdmBundle:Node')->getChildrenDirectNoDisable($node);
             foreach($nodeChildList as $nodeChild) {
                 $this->addNodeExport($zip, $nodeChild, $recursive, $dir);
             }

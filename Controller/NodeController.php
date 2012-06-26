@@ -144,7 +144,9 @@ class NodeController extends Controller
             $filePathExport = $treeManager->export($node, null, true);
             $this->get('kitpages.util')->getFile($filePathExport, 0, null, $node->getLabel().'-'.date('Y-m-d').'.zip');
         } catch (\Exception $e) {
-
+            $this->getRequest()->getSession()->setFlash("error", $this->get('translator')->trans("technical error, ".$e->getMessage()));
+            $target = $this->getRequest()->query->get('kitpages_target', null);
+            return $this->redirect($target);
         }
         return null;
     }

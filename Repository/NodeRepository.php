@@ -55,28 +55,30 @@ class NodeRepository extends NestedTreeRepository
 
     public function getNodeByFileId($fileId)
     {
-        $node = $this->_em
-            ->createQuery("
-                SELECT n
-                FROM KitpagesEdmBundle:Node n
-                INNER JOIN n.file f
-                LEFT JOIN f.originalVersion ov
-                WHERE f.id = :fileId
-                  OR ov.id = :fileId
-                ORDER BY f.id DESC
-              ")
-            ->setParameter("fileId", $fileId)
-            ->setMaxResults(1)
-            ->getResult();
-        if (count($node) > 0) {
-            return $node[0];
-        } else {
-            throw new EdmException("No Node for the file");
-        }
+        $connection = $this->_em->getConnection();
 
+
+        $stmt  = $connection->executeQuery('
+            SELECT n.id
+            FROM kit_edm_node n
+            WHERE n.file_id = (
+                SELECT f2.id
+                FROM kit_edm_file f
+                INNER JOIN kit_edm_file f2
+                ON f2.original_version_id = f.original_version_id
+                WHERE f.id = ?
+                ORDER BY f2.id DESC LIMIT 1)
+            OR n.file_id = ?',
+            array($fileId, $fileId),
+            array(\PDO::PARAM_INT)
+        );
+        $nodeId = $stmt->fetch();
+        $node = $this->_em->find('KitpagesEdmBundle:Node', $nodeId['id']);
+
+        return $node;
     }
 
-    public function getChildrenNoDisable($node)
+    public function getChildrenDirectNoDisable($node)
     {
         $nodeList = $this->_em
             ->createQuery("
@@ -84,11 +86,13 @@ class NodeRepository extends NestedTreeRepository
                 FROM KitpagesEdmBundle:Node n
                 WHERE n.right < :right
                   AND n.left > :left
+                  AND n.parent = :node
                   AND n.status is null
                 ORDER BY n.left
               ")
             ->setParameter("right", $node->getRight())
             ->setParameter("left", $node->getLeft())
+            ->setParameter("node", $node)
             ->getResult();
         return $nodeList;
     }
