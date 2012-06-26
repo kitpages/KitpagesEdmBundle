@@ -65,7 +65,7 @@ class NodeRepository extends NestedTreeRepository
                 SELECT f2.id
                 FROM kit_edm_file f
                 INNER JOIN kit_edm_file f2
-                ON f2.original_version_id = f.original_version_id
+                ON (f2.original_version_id = f.original_version_id or f2.original_version_id=f.id)
                 WHERE f.id = ?
                 ORDER BY f2.id DESC LIMIT 1)
             OR n.file_id = ?',
