@@ -338,6 +338,21 @@ class TreeManager {
         }
     }
 
+    public function nodeFileDetailActionList($node, $actionList, $kitpages_target) {
+        $event = new TreeEvent();
+        $event->setNode($node);
+        $event->set('actionList', $actionList);
+        $this->dispatcher->dispatch(KitpagesEdmEvents::onNodeFileDetailActionList, $event);
+        if (!$event->isDefaultPrevented()) {
+            $actionList = $event->get('actionList');
+            $actionList = $this->nodeFileActionList($node, $actionList, $kitpages_target);
+        }
+        $event->set('actionList', $actionList);
+        $this->dispatcher->dispatch(KitpagesEdmEvents::afterNodeFileDetailActionList, $event);
+        return $event->get('actionList');
+    }
+
+
     public function nodeFileActionList($node, $actionList, $kitpages_target)
     {
         $nodeStatus = $node->getStatus();

@@ -32,7 +32,7 @@ class NodeController extends Controller
             return $this->render('KitpagesEdmBundle:Node:view.html.twig', array(
                 'node' => $node,
                 'formFileVersion'   => $formFileVersion->createView(),
-                'actionList' => $treeManager->nodeFileActionList($node, array(), $target)
+                'actionList' => $treeManager->nodeFileDetailActionList($node, array(), $target)
             ));
         } else {
             return $this->redirect($target);

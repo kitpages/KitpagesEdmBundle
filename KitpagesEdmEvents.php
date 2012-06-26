@@ -22,4 +22,7 @@ final class KitpagesEdmEvents
     const afterModifyStatusNode = 'kitpages.edm.after_modify_status_node';
 
     const afterCreateNodeDirectory = 'kitpages.edm.after_create_node_directory';
+
+    const onNodeFileDetailActionList = 'kitpages.edm.on_node_file_detail_action_list';
+    const afterNodeFileDetailActionList = 'kitpages.edm.after_node_file_detail_action_list';
 }
