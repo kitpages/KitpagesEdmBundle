@@ -59,13 +59,12 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
-
-    $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').live('click', function(e) {
-        $(this).addClass('kit-edm-tree-form-load');
-        $(this).html('');
+    $('.kitpages_edmbundle_nodefileversionform form').live('submit', function() {
+        $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').hide();
+        $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').parent().addClass('kit-edm-tree-form-load');
     });
-    $('.kitpages_edmbundle_nodefileform button[type="submit"]').live('click', function(e) {
-        $(this).addClass('kit-edm-tree-form-load');
-        $(this).html('');
+    $('.kitpages_edmbundle_nodefileform form').live('submit', function() {
+        $('.kitpages_edmbundle_nodefileform button[type="submit"]').hide();
+        $('.kitpages_edmbundle_nodefileform button[type="submit"]').parent().addClass('kit-edm-tree-form-load');
     });
 });
