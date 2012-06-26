@@ -13,9 +13,9 @@ delete file: suppression du fichier
 delete file definitely: supprime le fichier définitivement
 delete directory definitely: supprime le répertoire définitivement
 delete definitely: supprimer définitivement
-undelete directory: Réstaurer le répertoire
-undelete file: Réstaurer le fichier
-undelete: Réstaurer
+undelete directory: Restaurer le répertoire
+undelete file: Restaurer le fichier
+undelete: Restaurer
 Do you confirm you want to delete file %label% definitely?: Confirmez-vous la suppression définitive du fichier %label%?
 Do you confirm you want to delete directory %label% definitely?: Confirmez-vous la suppression définitive du répertoire %label% et de tout ce qu'il contient?
 Do you confirm you want to delete file %label%?: Confirmez-vous la suppression du fichier %label%?
@@ -31,3 +31,6 @@ delete the older file version in the directory: supprimer les anciennes version 
 delete older version: supprimer les versions
 Older versions of files in the directory are deleted: Les anciennes versions des fichiers du répertoire sont supprimées
 Older versions of the file are deleted: Les anciennes versions du fichier sont supprimées
+File deleted: Fichier supprimé
+File deleted definitely: Fichier supprimé définitivement
+Directory deleted definitely: Répertoire supprimé définitivement
