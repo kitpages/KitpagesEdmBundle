@@ -85,7 +85,6 @@ class NodeController extends Controller
 
     public function addFileVersionAction()
     {
-
         // build basic form
         $form   = $this->createForm(new NodeFileVersionForm());
 

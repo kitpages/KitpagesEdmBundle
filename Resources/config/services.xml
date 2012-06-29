@@ -37,6 +37,7 @@
             <argument type="service" id="doctrine" />
             <argument type="service" id="request" strict="false" />
             <argument type="service" id="kitpages_edm.tree_map" />
+            <argument type="service" id="kitpages_util.hash" />
             <argument type="service" id="translator" />
         </service>
         <service id="kitpages.edm.manager.userPreference" class="%kitpages_edm.userPreferenceManager%">

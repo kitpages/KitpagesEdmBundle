@@ -17,8 +17,72 @@ use Symfony\Component\Form\FormError;
 class NodeFileVersionForm extends AbstractType
 {
 
+    protected $kitpagesUtilHash = null;
+
+    public function __construct($kitpages_util_hash = null, $dataUser = array())
+    {
+        $this->kitpagesUtilHash = $kitpages_util_hash;
+        $dataUserInit = array(
+            'userEmail' => '',
+            'userId' => '',
+            'userName' => '',
+            'userIp' => ''
+        );
+
+        $this->dataUser = array_merge($dataUserInit, $dataUser);
+    }
+
     public function buildForm(FormBuilder $builder, array $options)
     {
+        $data = $builder->getData();
+        if ($this->kitpagesUtilHash != null) {
+            $builder->add(
+                "tokenEncrypted",
+                "hidden",
+                array(
+                    "data" => $this->kitpagesUtilHash->getHash(
+                        $this->dataUser['userId'],
+                        $this->dataUser['userName'],
+                        $this->dataUser['userEmail'],
+                        $this->dataUser['userIp'],
+                        session_id(),
+                        $this->getName()
+                    ),
+                    'property_path' => false
+                )
+            );
+        } else {
+            $builder->add("tokenEncrypted", "hidden", array('property_path' => false));
+        }
+
+        $builder->add(
+            "userEmail",
+            "hidden",
+            array(
+                "data" => $this->dataUser['userEmail']
+            )
+        );
+        $builder->add(
+            "userName",
+            "hidden",
+            array(
+                "data" => $this->dataUser['userName']
+            )
+        );
+        $builder->add(
+            "userId",
+            "hidden",
+            array(
+                "data" => $this->dataUser['userId']
+            )
+        );
+        $builder->add(
+            "userIp",
+            "hidden",
+            array(
+                "data" => $this->dataUser['userIp']
+            )
+        );
 
         $builder->add(
             'fileUpload',
@@ -41,7 +105,7 @@ class NodeFileVersionForm extends AbstractType
             'textarea',
             array(
                 'label' => 'Note version',
-                'required' => false,
+                'required' => false
             )
         );
 

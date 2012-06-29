@@ -51,7 +51,14 @@ class TreeController extends Controller
 
         $formFile   = $this->createForm(new NodeFileForm($hash), $entity);
 
-        $formFileVersion   = $this->createForm(new NodeFileVersionForm());
+
+        $dataUser = array(
+            'userEmail' => $user['email'],
+            'userId' => $user['id'],
+            'userName' => $user['name'],
+            'userIp' => $this->get('request')->getClientIp()
+        );
+        $formFileVersion   = $this->createForm(new NodeFileVersionForm($hash, $dataUser));
         $nodeList = $treeManager->nodeInTree($node, null, $this->get('request')->getPathInfo());
 
         if ($htmlTreeId == null) {

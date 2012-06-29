@@ -8,6 +8,7 @@ use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Form\FormError;
 use Kitpages\EdmBundle\Entity\Node;
 use Kitpages\EdmBundle\Service\TreeMap;
+use Kitpages\UtilBundle\Service\Hash;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class NodeFileVersionFormHandler
@@ -16,11 +17,18 @@ class NodeFileVersionFormHandler
     protected $doctrine;
     protected $treeMap;
 
-    public function __construct(Registry $doctrine, Request $request, TreeMap $treeMap, Translator $translator)
+    public function __construct(
+        Registry $doctrine,
+        Request $request,
+        TreeMap $treeMap,
+        Hash $kitpagesUtilHash,
+        Translator $translator
+    )
     {
         $this->doctrine = $doctrine;
         $this->request = $request;
         $this->treeMap = $treeMap;
+        $this->kitpagesUtilHash = $kitpagesUtilHash;
         $this->translator = $translator;
     }
 
@@ -30,18 +38,43 @@ class NodeFileVersionFormHandler
             $form->bindRequest($this->request);
 
             if ($form->isValid()) {
-                $em = $this->doctrine->getEntityManager();
-                $node_id = $form['node_id']->getData();
-                $versionNote = $form['versionNote']->getData();
-                $sendEmail = $form['sendEmail']->getData();
 
-                $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
-                $node = $repositoryNode->find($node_id);
+                $encrypted = $form["tokenEncrypted"]->getData();
+                $check = $this->kitpagesUtilHash->checkHash(
+                    $encrypted,
+                    $form['userId']->getData(),
+                    $form['userName']->getData(),
+                    $form['userEmail']->getData(),
+                    $form['userIp']->getData(),
+                    session_id(),
+                    $form->getName()
+                );
 
-                $treeManager = $this->treeMap->getEdm($node->getTreeId());
-                $treeManager->uploadFile($node, $form['fileUpload']->getData(), $sendEmail, $versionNote);
+                if ( $check ) {
+                    $em = $this->doctrine->getEntityManager();
+                    $node_id = $form['node_id']->getData();
+                    $versionNote = $form['versionNote']->getData();
+                    $sendEmail = $form['sendEmail']->getData();
 
-                $this->request->getSession()->setFlash('notice', $this->translator->trans('New version is uploaded'));
+                    $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+                    $node = $repositoryNode->find($node_id);
+
+                    $node->setUserId($form['userId']->getData());
+                    $node->setUserName($form['userName']->getData());
+                    $node->setUserEmail($form['userEmail']->getData());
+                    $node->setUserIp($form['userIp']->getData());
+
+                    $em->persist($node);
+                    $em->flush();
+
+                    $treeManager = $this->treeMap->getEdm($node->getTreeId());
+                    $treeManager->uploadFile($node, $form['fileUpload']->getData(), $sendEmail, $versionNote);
+
+                    $this->request->getSession()->setFlash('notice', $this->translator->trans('New version is uploaded'));
+
+                } else {
+                    $this->request->getSession()->setFlash("error", $this->translator->trans("technical error, not uploaded"));
+                }
                 return true;
             }
             $this->request->getSession()->setFlash('error', $this->getRenderErrorMessages($form));
