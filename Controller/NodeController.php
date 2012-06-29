@@ -10,9 +10,56 @@ use Kitpages\EdmBundle\Form\NodeDirectoryForm;
 use Kitpages\EdmBundle\Form\NodeFileForm;
 use Kitpages\EdmBundle\Form\NodeFileVersionForm;
 use Kitpages\FileSystemBundle\Model\AdapterFile;
+use Symfony\Component\HttpFoundation\Response;
 
 class NodeController extends Controller
 {
+
+    public function widgetNodeAction(
+        $nodeId,
+        $user = array(),
+        $actionList = array()
+    )
+    {
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $node = $repositoryNode->find($nodeId);
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+        $nodeType = $node->getNodeType();
+
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+
+        $hash = $this->get('kitpages_util.hash');
+        $dataUser = array(
+            'userEmail' => $user['email'],
+            'userId' => $user['id'],
+            'userName' => $user['name'],
+            'userIp' => $this->get('request')->getClientIp()
+        );
+
+        if ($nodeType == Node::NODE_TYPE_FILE) {
+
+            $formFileVersion   = $this->createForm(new NodeFileVersionForm($hash, $dataUser));
+
+            $kitpages_target = $this->get('router')->generate(
+                'kitpages_edm_view_node',
+                array(
+                    'nodeId' => $node->getId(),
+                    'kitpages_target' => $target
+                )
+            );
+
+            return $this->render('KitpagesEdmBundle:Node:widgetNode.html.twig', array(
+                'node' => $node,
+                'formFileVersion'   => $formFileVersion->createView(),
+                'actionList' => $treeManager->nodeFileDetailActionList($node, array(), $kitpages_target)
+            ));
+        } else {
+            return new Response(null);
+        }
+    }
+
 
     public function ViewAction($nodeId)
     {
@@ -24,10 +71,11 @@ class NodeController extends Controller
         $nodeType = $node->getNodeType();
 
         $target = $this->getRequest()->query->get('kitpages_target', null);
-
+        $hash = $this->get('kitpages_util.hash');
+        $dataUser = array();
         if ($nodeType == Node::NODE_TYPE_FILE) {
 
-            $formFileVersion   = $this->createForm(new NodeFileVersionForm());
+            $formFileVersion   = $this->createForm(new NodeFileVersionForm($hash, $dataUser));
 
             $kitpages_target = $this->get('router')->generate(
                 'kitpages_edm_view_node',
@@ -45,7 +93,6 @@ class NodeController extends Controller
         } else {
             return $this->redirect($target);
         }
-
     }
 
     public function addDirectoryAction()

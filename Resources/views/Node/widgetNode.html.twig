@@ -1,0 +1,54 @@
+<div class="kit-edm-node-view">
+    <div class="kit-edm-node-view-title">
+        {{node.label}}<br />
+
+        <ul class="kit-edm-tree-actions kit-edm-menu">
+        {% for kitEdmNodeAction in actionList %}
+            <li class="{{kitEdmNodeAction.class|default()}}" >
+                <a href="{% if kitEdmNodeAction.url is defined %}{{kitEdmNodeAction.url}}{% else %}#{% endif %}" class="poplight {{kitEdmNodeAction.classLink|default()}}"
+                    {% if kitEdmNodeAction.attr is defined %}
+                        {% for attrKey, attrValue in kitEdmNodeAction.attr %}
+                            {{attrKey}}="{{attrValue}}"
+                        {% endfor %}
+                        {% if (kitEdmNodeAction.attr.title is defined) == false %}
+                            title="{{kitEdmNodeAction.label}}"
+                        {% endif %}
+                    {% endif %}
+                >
+                {% if kitEdmNodeAction.icon is defined %}
+                    <img src="{{asset(kitEdmNodeAction.icon)}}">
+                {% else %}
+                    {{kitEdmNodeAction.label}}
+                {% endif %}
+                    </a>
+            </li>
+        {% endfor %}
+        </ul>
+        <div style="clear:both" ></div>
+    </div>
+    <div class="kit-edm-node-view-section-description">
+        <h3>{{ "Description" | trans }}</h3>
+        <p>{{node.comment}}</p>
+    </div>
+    {% if node.file != null %}
+    <div class="kit-edm-node-view-section-information">
+        <h3>{{ "Informations" | trans }}</h3>
+        <ul>
+            <li>{{ "Taille" | trans }} : {{node.file.data.size // 1024 }} Ko</li>
+            <li>{{ "Date de la dernière version :" | trans }} : {{node.file.updatedAt|date("d-m-Y")}}</li>
+            <li>{{ "Auteur" | trans }} : {{node.userEmail}}</li>
+        </ul>
+    </div>
+    {% endif%}
+</div>
+<div class="popup_block kitpages_edmbundle_nodefileversionform">
+    <div class="kit-edm-tree-form-action-title">{{ "Add a new version" | trans }}</div>
+    <form method="post" action="{{ path("kitpages_edm_add_file_version", {kitpages_target: app.request.requestUri }) }}" {{ form_enctype(formFileVersion) }}>
+        {{ form_errors(formFileVersion) }}
+        {{ form_rest(formFileVersion) }}
+        <p>
+            <button type="submit" class="btn-standard">{{ "Send" | trans }}</button>
+        </p>
+        {{ form_widget(formFileVersion) }}
+    </form>
+</div>
