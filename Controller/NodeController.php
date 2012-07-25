@@ -227,6 +227,7 @@ class NodeController extends Controller
     }
 
     public function renderFileAction(){
+        ini_set('memory_limit', '512M');
         $em = $this->getDoctrine()->getEntityManager();
         $fileId = $this->getRequest()->query->get('id', null);
 
