@@ -54,16 +54,6 @@
 </div>
 <script>
     $(document).ready(function() {
-        $(window).scrollTop({{kitEdmUserPreferenceTree.scrollTree|default(0)}});
-        var timer;
-        $(window).scroll(function () {
-            clearTimeout(timer);
-            timer = setTimeout(
-            function(){$.ajax({
-                url: "{{ path('kitpages_edm_userpreference_tree_scroll')}}?scroll="+$(window).scrollTop()
-            })},
-            1000
-            );
-        });
+        scrollPosition = {{kitEdmUserPreferenceTree.scrollTree|default(0)}};
     });
 </script>
