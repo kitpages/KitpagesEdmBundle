@@ -1,5 +1,3 @@
-var scrollPosition;
-var scrollUrl;
 var nodeExpand = function (el) {
     el.parent().parent().nextAll('div.kit-edm-tree-state-node').show();
     el.parent().find('.kit-edm-tree-collapsed').show();
@@ -68,16 +66,5 @@ $(document).ready(function() {
     $('.kit-edm-expand').click(function(e) {
         $(this).parent().parent().parent().find('.kit-edm-tree-expanded').trigger('click');
         e.preventDefault();
-    });
-    $(window).scrollTop(scrollPosition);
-    var timer;
-    $(window).scroll(function () {
-        clearTimeout(timer);
-        timer = setTimeout(
-            function(){$.ajax({
-                url: scrollUrl+$(window).scrollTop()
-            })},
-            1000
-        );
     });
 });

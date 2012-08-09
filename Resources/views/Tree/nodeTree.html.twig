@@ -42,7 +42,17 @@
 <script>
     $(document).ready(function() {
         scrollPosition = {{kitEdmUserPreferenceTree.scrollTree|default(0)}};
-        scrollUrl = "{{ path('kitpages_edm_userpreference_tree_scroll')}}?scroll=";
+        $(window).scrollTop(scrollPosition);
+        var timer;
+        $(window).scroll(function () {
+            clearTimeout(timer);
+            timer = setTimeout(
+                    function(){$.ajax({
+                        url: "{{ path('kitpages_edm_userpreference_tree_scroll')}}?scroll="+$(window).scrollTop()
+                    })},
+                    1000
+            );
+        });
         $('#{{treeId}}').show();
     });
 </script>
