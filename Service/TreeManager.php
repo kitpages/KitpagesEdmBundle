@@ -41,6 +41,10 @@ class TreeManager {
     CONST TYPE_ACTION_RETRIEVE_FILE = "retrieveFile";
     CONST TYPE_ACTION_DELETE_DIRECTORY = "deleteDirectory";
     CONST TYPE_ACTION_DELETE_FILE = "deleteFile";
+    CONST TYPE_ACTION_MOVE_UP_FILE = "moveUpFile";
+    CONST TYPE_ACTION_MOVE_DOWN_FILE = "moveDownFile";
+    CONST TYPE_ACTION_MOVE_UP_DIRECTORY = "moveUpDirectory";
+    CONST TYPE_ACTION_MOVE_DOWN_DIRECTORY = "moveDownDirectory";
 
     public function __construct(
         Registry $doctrine,
@@ -246,6 +250,30 @@ class TreeManager {
                             )
                         );
                         $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_MOVE_UP_DIRECTORY,
+                            'label' => $this->translator->trans('move up directory').' '.$node->getLabel(),
+                            'icon' => 'bundles/kitpagesedm/icon/move-up.png',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_move_up_node',
+                                array(
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
+                                )
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_MOVE_DOWN_DIRECTORY,
+                            'label' => $this->translator->trans('move down directory').' '.$node->getLabel(),
+                            'icon' => 'bundles/kitpagesedm/icon/move-down.png',
+                            'url' => $this->router->generate(
+                                'kitpages_edm_move_down_node',
+                                array(
+                                    'nodeId' => $node->getId(),
+                                    'kitpages_target' => $kitpages_target
+                                )
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
                             'type' => self::TYPE_ACTION_ADD_DIRECTORY,
                             'label' => $this->translator->trans('Add a directory'),
                             'icon' => 'bundles/kitpagesedm/icon/add-directory.png',
@@ -253,14 +281,6 @@ class TreeManager {
                             'attr' => array(
                                 'data-kitpages-edm-field-name' => 'kitpages_edmbundle_nodedirectoryform_parent_id',
                                 'data-kitpages-edm-field-value'=> $node->getId(),
-//                                'data-edm-tree-action-url' => $this->router->generate(
-//                                    'kitpages_edm_userpreference_tree',
-//                                    array(
-//                                        'id' => $node->getId(),
-//                                        'action' => 'expand',
-//                                        'scope' => 'node'
-//                                    )
-//                                ),
                                 'rel' => "kitpages_edmbundle_nodedirectoryform"
                             )
                         );
@@ -272,14 +292,6 @@ class TreeManager {
                             'attr' => array(
                                 'data-kitpages-edm-field-name' => 'kitpages_edmbundle_nodefileform_parent_id',
                                 'data-kitpages-edm-field-value'=> $node->getId(),
-//                                'data-edm-tree-action-url' => $this->router->generate(
-//                                    'kitpages_edm_userpreference_tree',
-//                                    array(
-//                                        'id' => $node->getId(),
-//                                        'action' => 'expand',
-//                                        'scope' => 'node'
-//                                    )
-//                                ),
                                 'rel' => "kitpages_edmbundle_nodefileform"
                             )
                         );
@@ -399,6 +411,30 @@ class TreeManager {
                     )
                 );
             }
+            $nodeTree['actionList'][] = array(
+                'type' => self::TYPE_ACTION_MOVE_UP_FILE,
+                'label' => $this->translator->trans('move up file').' '.$node->getLabel(),
+                'icon' => 'bundles/kitpagesedm/icon/move-up.png',
+                'url' => $this->router->generate(
+                    'kitpages_edm_move_up_node',
+                    array(
+                        'nodeId' => $node->getId(),
+                        'kitpages_target' => $kitpages_target
+                    )
+                )
+            );
+            $nodeTree['actionList'][] = array(
+                'type' => self::TYPE_ACTION_MOVE_DOWN_FILE,
+                'label' => $this->translator->trans('move down file').' '.$node->getLabel(),
+                'icon' => 'bundles/kitpagesedm/icon/move-down.png',
+                'url' => $this->router->generate(
+                    'kitpages_edm_move_down_node',
+                    array(
+                        'nodeId' => $node->getId(),
+                        'kitpages_target' => $kitpages_target
+                    )
+                )
+            );
             $actionList[] = array(
                 'type' => self::TYPE_ACTION_ADD_FILE_VERSION,
                 'label' => $this->translator->trans('Add a new version'),
@@ -507,6 +543,29 @@ class TreeManager {
             $em->flush();
         }
         $this->dispatcher->dispatch(KitpagesEdmEvents::afterDeleteNode, $event);
+    }
+
+    public function moveUp($node, $nbrPosition)
+    {
+        $event = new TreeEvent();
+        $event->setNode($node);
+        $this->dispatcher->dispatch(KitpagesEdmEvents::onMoveNode, $event);
+        if (! $event->isDefaultPrevented()) {
+            $em = $this->doctrine->getEntityManager();
+            $em->getRepository('KitpagesEdmBundle:Node')->moveUp($node, $nbrPosition);
+        }
+        $this->dispatcher->dispatch(KitpagesEdmEvents::afterMoveNode, $event);
+    }
+    public function moveDown($node, $nbrPosition)
+    {
+        $event = new TreeEvent();
+        $event->setNode($node);
+        $this->dispatcher->dispatch(KitpagesEdmEvents::onMoveNode, $event);
+        if (! $event->isDefaultPrevented()) {
+            $em = $this->doctrine->getEntityManager();
+            $em->getRepository('KitpagesEdmBundle:Node')->moveDown($node, $nbrPosition);
+        }
+        $this->dispatcher->dispatch(KitpagesEdmEvents::afterMoveNode, $event);
     }
 
     public function modifyStatusNode($node, $status, $recursive)

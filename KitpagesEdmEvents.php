@@ -21,6 +21,9 @@ final class KitpagesEdmEvents
     const onModifyStatusNode = 'kitpages.edm.on_modify_status_node';
     const afterModifyStatusNode = 'kitpages.edm.after_modify_status_node';
 
+    const onMoveNode = 'kitpages.edm.on_move_node';
+    const afterMoveNode = 'kitpages.edm.after_move_node';
+
     const afterCreateNodeDirectory = 'kitpages.edm.after_create_node_directory';
 
     const onNodeFileDetailActionList = 'kitpages.edm.on_node_file_detail_action_list';

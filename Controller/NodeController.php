@@ -266,4 +266,41 @@ class NodeController extends Controller
         return $this->redirect($target);
     }
 
+    public function moveUpAction($nodeId){
+
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $node = $repositoryNode->find($nodeId);
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+        $treeManager->moveUp($node, 1);
+        $nodeType = $node->getNodeType();
+        if ($nodeType == Node::NODE_TYPE_FILE) {
+            $this->get('request')->getSession()->setFlash('notice', $this->get('translator')->trans("File moved"));
+        } elseif ($nodeType == Node::NODE_TYPE_DIRECTORY) {
+            $this->get('request')->getSession()->setFlash('notice', $this->get('translator')->trans("Directory moved"));
+        }
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        return $this->redirect($target);
+    }
+
+    public function moveDownAction($nodeId){
+
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $node = $repositoryNode->find($nodeId);
+        $treeManager = $this->get('kitpages_edm.tree_map')->getEdm($node->getTreeId());
+        $treeManager->moveDown($node, 1);
+        $nodeType = $node->getNodeType();
+        if ($nodeType == Node::NODE_TYPE_FILE) {
+            $this->get('request')->getSession()->setFlash('notice', $this->get('translator')->trans("File moved"));
+        } elseif ($nodeType == Node::NODE_TYPE_DIRECTORY) {
+            $this->get('request')->getSession()->setFlash('notice', $this->get('translator')->trans("Directory moved"));
+        }
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        return $this->redirect($target);
+
+    }
+
 }

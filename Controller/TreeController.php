@@ -98,4 +98,17 @@ class TreeController extends Controller
         return new Response(null);
     }
 
+    public function saveUserPreferenceTreeScrollAction(){
+        $userPreferenceManager = $this->get('kitpages.edm.manager.userPreference');
+        $request = $this->getRequest();
+
+        $scroll = $request->query->get("scroll", 0);
+        $userPreferenceManager->setPreferenceDataTreeScroll(
+            $this->get('security.context')->getToken()->getUserName(),
+            $scroll
+        );
+
+        return new Response(null);
+    }
+
 }

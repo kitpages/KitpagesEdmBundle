@@ -51,6 +51,17 @@ kitpages_edm_delete_node:
     requirements:
         nodeId: \d+
 
+kitpages_edm_move_up_node:
+    pattern:  /moveUpNode/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:moveUp }
+    requirements:
+        nodeId: \d+
+
+kitpages_edm_move_down_node:
+    pattern:  /moveDownNode/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:moveDown }
+    requirements:
+        nodeId: \d+
 
 kitpages_edm_export_node:
     pattern:  /export/{nodeId}
@@ -61,3 +72,7 @@ kitpages_edm_export_node:
 kitpages_edm_userpreference_tree:
     pattern:  /userPreference/tree
     defaults: { _controller: KitpagesEdmBundle:Tree:saveUserPreferenceTree }
+
+kitpages_edm_userpreference_tree_scroll:
+    pattern:  /userPreference/treeScroll
+    defaults: { _controller: KitpagesEdmBundle:Tree:saveUserPreferenceTreeScroll }

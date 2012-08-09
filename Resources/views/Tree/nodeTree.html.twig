@@ -41,12 +41,18 @@
     </div>
 <script>
     $(document).ready(function() {
-        {#treeCollapseAll($('#{{treeId}}'));#}
-        {#for (var i=0; i<{{openTreeLevel}}; i++) {#}
-            {#$('#{{treeId}} .kit-edm-tree-level-' + i +' > .kit-edm-tree-node > .kit-edm-tree-line .kit-edm-tree-expanded').each(function(index) {#}
-                {#nodeExpand($(this));#}
-            {#});#}
-        {#}#}
+        scrollPosition = {{kitEdmUserPreferenceTree.scrollTree|default(0)}};
+        $(window).scrollTop(scrollPosition);
+        var timer;
+        $(window).scroll(function () {
+            clearTimeout(timer);
+            timer = setTimeout(
+                    function(){$.ajax({
+                        url: "{{ path('kitpages_edm_userpreference_tree_scroll')}}?scroll="+$(window).scrollTop()
+                    })},
+                    1000
+            );
+        });
         $('#{{treeId}}').show();
     });
 </script>
