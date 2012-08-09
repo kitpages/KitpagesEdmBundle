@@ -1,4 +1,5 @@
 var scrollPosition;
+var scrollUrl;
 var nodeExpand = function (el) {
     el.parent().parent().nextAll('div.kit-edm-tree-state-node').show();
     el.parent().find('.kit-edm-tree-collapsed').show();
@@ -74,7 +75,7 @@ $(document).ready(function() {
         clearTimeout(timer);
         timer = setTimeout(
             function(){$.ajax({
-                url: "{{ path('kitpages_edm_userpreference_tree_scroll')}}?scroll="+$(window).scrollTop()
+                url: scrollUrl+$(window).scrollTop()
             })},
             1000
         );
