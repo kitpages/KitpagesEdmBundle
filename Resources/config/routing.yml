@@ -76,3 +76,7 @@ kitpages_edm_userpreference_tree:
 kitpages_edm_userpreference_tree_scroll:
     pattern:  /userPreference/treeScroll
     defaults: { _controller: KitpagesEdmBundle:Tree:saveUserPreferenceTreeScroll }
+
+kitpages_edm_upload_status:
+    pattern:  /uploadStatus/{uploadProgressName}
+    defaults: { _controller: KitpagesEdmBundle:Node:uploadStatus }

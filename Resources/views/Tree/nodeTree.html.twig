@@ -19,27 +19,42 @@
     <div class="kitpages_edmbundle_nodefileform popup_block">
         <div class="kit-edm-tree-form-action-title">{{ "Add a file" | trans }}</div>
         <form method="post" action="{{ path("kitpages_edm_add_file", {kitpages_target: app.request.requestUri }) }}" {{ form_enctype(formFile) }}>
+            <input type="hidden" name="PHP_SESSION_UPLOAD_PROGRESS" value="upload" />
             {{ form_errors(formFile) }}
             {{ form_rest(formFile) }}
             <p>
-                <button type="submit" class="btn-standard">{{ "Send" | trans }}</button>
+                <button type="button" class="btn-standard" >{{ "Send" | trans }}</button>
             </p>
             {{ form_widget(formFile) }}
         </form>
+        <div class="progress" style="visibility:hidden">
+            <progress></progress>
+            <p class="progress_status">0%</p>
+        </div>
     </div>
 
     <div class="kitpages_edmbundle_nodefileversionform popup_block">
         <div class="kit-edm-tree-form-action-title">{{ "Add a new version" | trans }}</div>
         <form method="post" action="{{ path("kitpages_edm_add_file_version", {kitpages_target: app.request.requestUri }) }}" {{ form_enctype(formFileVersion) }}>
+            <input type="hidden" name="PHP_SESSION_UPLOAD_PROGRESS" value="upload" />
             {{ form_errors(formFileVersion) }}
             {{ form_rest(formFileVersion) }}
             <p>
-                <button type="submit" class="btn-standard" >{{ "Send" | trans }}</button>
+                <button type="button" class="btn-standard" >{{ "Send" | trans }}</button>
             </p>
             {{ form_widget(formFileVersion) }}
         </form>
+        <div class="progress" style="visibility:hidden">
+            <progress></progress>
+            <p class="progress_status">0%</p>
+        </div>
     </div>
 <script>
+
+    var urlUploadStatus = "{{ path('kitpages_edm_upload_status', {'uploadProgressName': 'upload'})}}";
+
+    var test={{test}};
+
     $(document).ready(function() {
         scrollPosition = {{kitEdmUserPreferenceTree.scrollTree|default(0)}};
         $(window).scrollTop(scrollPosition);
@@ -54,6 +69,7 @@
             );
         });
         $('#{{treeId}}').show();
+
     });
 </script>
 </div>

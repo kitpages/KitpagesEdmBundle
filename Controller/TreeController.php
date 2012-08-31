@@ -68,7 +68,7 @@ class TreeController extends Controller
         $userPreferenceManager = $this->get('kitpages.edm.manager.userPreference');
         $userPreference = $userPreferenceManager->getPreference($node->getTreeId(), $user['name']);
 
-        return $this->render('KitpagesEdmBundle:Tree:nodeTree.html.twig', array(
+        $data = array(
             'nodeChildren' => array($nodeList),
             'formDirectory'   => $formDirectory->createView(),
             'formFile'   => $formFile->createView(),
@@ -77,7 +77,14 @@ class TreeController extends Controller
             'treeId' => $htmlTreeId,
             'openTreeLevel' => $openTreeLevel,
             'kitEdmUserPreferenceTree' => $userPreference->getDataTree()
-        ));
+        );
+
+        $data['test'] = 0;
+        if (isset($_GET['test'])) {
+           $data['test'] = $_GET['test'];
+        }
+
+        return $this->render('KitpagesEdmBundle:Tree:nodeTree.html.twig', $data);
     }
 
     public function saveUserPreferenceTreeAction(){

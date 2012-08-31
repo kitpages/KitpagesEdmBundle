@@ -1,6 +1,50 @@
+var intervalId;
+var startUpload = false;
 $(document).ready(function() {
+    function progressHandlingFunction(e){
+        if(e.lengthComputable){
+            $('progress').attr({value:e.loaded,max:e.total});
+        }
+    }
 
+    function phpUploadStatus(){
+        $.getJSON(urlUploadStatus, function(data){
+            if(data)
+            {
+                $('.progress').val(Math.round(data.bytes_processed / data.content_length));
+                $('.progress_status').html('Uploading '+ Math.round((data.bytes_processed / data.content_length)*100) + '%');
+                startUpload = true;
+                phpUploadStatus();
+            }
+            else
+            {
+                if (startUpload) {
+                    $('.progress').val('1');
+                    $('.progress_status').html('Complete');
+                }
+                phpUploadStatus();
+            }
+        });
+    }
 
+    function phpUploadStatus2(){
+        $.getJSON(urlUploadStatus, function(data){
+            if(data)
+            {
+                $('.progress').val(Math.round(data.bytes_processed / data.content_length));
+                $('.progress_status').html('Uploading '+ Math.round((data.bytes_processed / data.content_length)*100) + '%');
+                startUpload = true;
+            }
+            else
+            {
+                if (startUpload) {
+                    $('.progress').val('1');
+                    $('.progress_status').html('Complete');
+                    clearInterval(intervalId);
+                }
+            }
+        });
+    }
     //Lorsque vous cliquez sur un lien de la classe poplight et que le href commence par #
     $('a.poplight[href^=#]').click(function() {
         var kitpagesEdmFieldName = $(this).data('kitpages-edm-field-name');
@@ -20,7 +64,7 @@ $(document).ready(function() {
         $('#' + popID).fadeIn().css({
             'width': Number(popWidth)
         })
-        .prepend('<a class="close">close</a>');
+            .prepend('<a class="close">close</a>');
 
 
 
@@ -59,12 +103,45 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
-    $('.kitpages_edmbundle_nodefileversionform form').live('submit', function() {
-        $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').hide();
-        $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').parent().addClass('kit-edm-tree-form-load');
+    $('.kitpages_edmbundle_nodefileversionform form :button').live('click', function() {
+
+        if (test == 1) {
+            $('.progress').val('0');
+            $('.progress')[0].style.visibility = 'visible';
+            phpUploadStatus();
+            $(this).parents('form').submit();
+        } else if (test == 2) {
+            $('.progress').val('0');
+            $('.progress')[0].style.visibility = 'visible';
+            intervalId = setInterval(phpUploadStatus2, 200);
+            setTimeout($(this).parents('form').submit(),300)
+        } else {
+            $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').hide();
+            $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').parent().addClass('kit-edm-tree-form-load');
+            $(this).parents('form').submit();
+        }
+//        intervalId = setInterval(phpUploadStatus, 200);
+//        setTimeout($(this).parents('form').submit(),300);
     });
-    $('.kitpages_edmbundle_nodefileform form').live('submit', function() {
-        $('.kitpages_edmbundle_nodefileform button[type="submit"]').hide();
-        $('.kitpages_edmbundle_nodefileform button[type="submit"]').parent().addClass('kit-edm-tree-form-load');
+
+    $('.kitpages_edmbundle_nodefileform form :button').live('click', function() {
+        if (test == 1) {
+            $('.progress').val('0');
+            $('.progress')[0].style.visibility = 'visible';
+            phpUploadStatus();
+            $(this).parents('form').submit();
+        } else if (test == 2) {
+            $('.progress').val('0');
+            $('.progress')[0].style.visibility = 'visible';
+            intervalId = setInterval(phpUploadStatus2, 200);
+            setTimeout($(this).parents('form').submit(),300)
+        } else {
+
+            $('.kitpages_edmbundle_nodefileform button[type="submit"]').hide();
+            $('.kitpages_edmbundle_nodefileform button[type="submit"]').parent().addClass('kit-edm-tree-form-load');
+            $(this).parents('form').submit();
+        }
+        ;
     });
+
 });

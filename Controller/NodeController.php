@@ -303,4 +303,15 @@ class NodeController extends Controller
 
     }
 
+    public function uploadStatusAction($uploadProgressName){
+        if (isset( $_SESSION['upload_progress_'.$uploadProgressName])) {
+            return new Response(json_encode( $_SESSION['upload_progress_'.$uploadProgressName]));
+        } else {
+            return new Response(null);
+        }
+        $this->get('request')->getSession()->setFlash('notice', $this->get('translator')->trans("File moved"));
+    }
+
+
+
 }
