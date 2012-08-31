@@ -71,3 +71,19 @@
 .kit-edm-tree-expanded-collapsed:hover {
     background-color: #f2f279;
 }
+
+.kit-edm-upload-progress-indicator
+{
+    width:0px;
+    background-image:url('../img/progressbar.gif');
+    height:22px;
+    margin:0;
+}
+.kit-edm-upload-progress
+{
+    width:250px;
+    /*padding:1px;*/
+    background-color:white;
+    /*border:1px solid black;*/
+    height:22px;
+}
