@@ -1,41 +1,29 @@
 var intervalId;
-var startUpload = false;
 var maxprogress = 250;
 var nbrUploadStatus = 0;
 var timeInterval=200;
 $(document).ready(function() {
-    function progressHandlingFunction(e){
-        if(e.lengthComputable){
-            $('progress').attr({value:e.loaded,max:e.total});
-        }
-    }
-
     function phpUploadStatus(){
         nbrUploadStatus = nbrUploadStatus+1;
+        if(nbrUploadStatus>5) {
+            clearInterval(intervalId);
+        }
         $.getJSON(urlUploadStatus, function(data){
+            nbrUploadStatus = nbrUploadStatus-1;
             if(nbrUploadStatus<2) {
                 clearInterval(intervalId);
                 intervalId = setInterval(phpUploadStatus, timeInterval);
             }
-            nbrUploadStatus = nbrUploadStatus-1;
-            if(nbrUploadStatus>5) {
-                clearInterval(intervalId);
-            }
             if(data)
             {
-
                 var progress = Math.round(maxprogress*data.bytes_processed / data.content_length);
                 $('.kit-edm-upload-progress-indicator').css('width', progress);
                 $('.progress_status').html('Uploading '+ Math.round((data.bytes_processed / data.content_length)*100) + '%');
-                startUpload = true;
             }
             else
             {
-                if (startUpload) {
-                    $('.kit-edm-upload-progress-indicator').css('width', maxprogress);
-                    $('.progress_status').html('Complete');
-                    clearInterval(intervalId);
-                }
+                $('.kit-edm-upload-progress-indicator').css('width', maxprogress);
+                $('.progress_status').html(txtComplete);
             }
         });
     }
@@ -98,31 +86,17 @@ $(document).ready(function() {
         }
     });
     $('.kitpages_edmbundle_nodefileversionform form :button').live('click', function() {
-
-        if (test == 2) {
-            $('.kit-edm-upload-progress')[0].style.visibility = 'visible';
-            intervalId = setInterval(phpUploadStatus, timeInterval);
-            setTimeout($(this).parents('form').submit(),100)
-        } else {
-            $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').hide();
-            $('.kitpages_edmbundle_nodefileversionform button[type="submit"]').parent().addClass('kit-edm-tree-form-load');
-            $(this).parents('form').submit();
-        }
-//        intervalId = setInterval(phpUploadStatus, 200);
-//        setTimeout($(this).parents('form').submit(),300);
+        $('.kit-edm-upload-progress')[0].style.visibility = 'visible';
+        intervalId = setInterval(phpUploadStatus, timeInterval);
+        setTimeout($(this).parents('form').submit(),100)
     });
 
     $('.kitpages_edmbundle_nodefileform form :button').live('click', function() {
-        if (test == 2) {
-            $('.kit-edm-upload-progress')[0].style.visibility = 'visible';
-            intervalId = setInterval(phpUploadStatus, timeInterval);
-            setTimeout($(this).parents('form').submit(),100)
-        } else {
-            $('.kitpages_edmbundle_nodefileform button[type="submit"]').hide();
-            $('.kitpages_edmbundle_nodefileform button[type="submit"]').parent().addClass('kit-edm-tree-form-load');
-            $(this).parents('form').submit();
-        }
-        ;
+        $('a.close, #fade').die("click");
+        $('.kitpages_edmbundle_nodefileform form :button').die("click");
+        $('.kit-edm-upload-progress')[0].style.visibility = 'visible';
+        intervalId = setInterval(phpUploadStatus, timeInterval);
+        setTimeout($(this).parents('form').submit(),100);
     });
 
 });
