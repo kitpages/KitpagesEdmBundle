@@ -16,6 +16,18 @@
         </form>
     </div>
 
+    <div class="kitpages_edmbundle_nodedirectoryeditform popup_block">
+        <div class="kit-edm-tree-form-action-title">{{ "Edit a directory" | trans }}</div>
+        <form method="post" {{ form_enctype(formDirectoryEdit) }}>
+            {{ form_errors(formDirectoryEdit) }}
+            {{ form_rest(formDirectoryEdit) }}
+            <p>
+                <button type="submit" class="btn-standard">{{ "Send" | trans }}</button>
+            </p>
+            {{ form_widget(formDirectoryEdit) }}
+        </form>
+    </div>
+
     <div class="kitpages_edmbundle_nodefileform popup_block">
         <div class="kit-edm-tree-form-action-title">{{ "Add a file" | trans }}</div>
         <form method="post" action="{{ path("kitpages_edm_add_file", {kitpages_target: app.request.requestUri }) }}" {{ form_enctype(formFile) }}>

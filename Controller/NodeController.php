@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Kitpages\EdmBundle\Entity\File;
 use Kitpages\EdmBundle\Entity\Node;
+use Kitpages\EdmBundle\Form\NodeDirectoryEditForm;
 use Kitpages\EdmBundle\Form\NodeDirectoryForm;
 use Kitpages\EdmBundle\Form\NodeFileForm;
 use Kitpages\EdmBundle\Form\NodeFileVersionForm;
@@ -104,6 +105,25 @@ class NodeController extends Controller
         $form   = $this->createForm(new NodeDirectoryForm(), $entity);
 
         $formHandler = $this->container->get('kitpages_edm.node.directory.form.handler');
+        $process = $formHandler->process($form, $entity);
+
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        if ($target) {
+            return $this->redirect($target);
+        }
+    }
+
+    public function editDirectoryAction($nodeId)
+    {
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $repositoryNode = $em->getRepository('KitpagesEdmBundle:Node');
+        $entity = $repositoryNode->find($nodeId);
+
+        // build basic form
+        $form   = $this->createForm(new NodeDirectoryEditForm(), $entity);
+
+        $formHandler = $this->container->get('kitpages_edm.node.directory.edit.form.handler');
         $process = $formHandler->process($form, $entity);
 
         $target = $this->getRequest()->query->get('kitpages_target', null);

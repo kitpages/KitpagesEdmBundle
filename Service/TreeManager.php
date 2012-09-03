@@ -30,6 +30,7 @@ class TreeManager {
     protected $actionList = array();
 
     CONST TYPE_ACTION_ADD_DIRECTORY = "addDirectory";
+    CONST TYPE_ACTION_EDIT_DIRECTORY = "editDirectory";
     CONST TYPE_ACTION_ADD_FILE = "addFile";
     CONST TYPE_ACTION_ADD_FILE_VERSION = "addFileVersion";
     CONST TYPE_ACTION_DELETE_OLD_FILE_VERSION = "deleteOldFileVersion";
@@ -271,6 +272,24 @@ class TreeManager {
                                     'nodeId' => $node->getId(),
                                     'kitpages_target' => $kitpages_target
                                 )
+                            )
+                        );
+                        $nodeTree['actionList'][] = array(
+                            'type' => self::TYPE_ACTION_EDIT_DIRECTORY,
+                            'label' => $this->translator->trans('Edit a directory'),
+                            'icon' => 'bundles/kitpagesedm/icon/edit-directory.png',
+                            'classLink' => 'poplight kit-edm-expand',
+                            'attr' => array(
+                                'data-kitpages-edm-action' => $this->router->generate(
+                                    'kitpages_edm_edit_directory',
+                                    array(
+                                        'nodeId' => $node->getId(),
+                                        'kitpages_target' => $kitpages_target
+                                    )
+                                ),
+                                'data-kitpages-edm-field-name' => 'kitpages_edmbundle_nodedirectoryeditform_label',
+                                'data-kitpages-edm-field-value'=> $node->getLabel(),
+                                'rel' => "kitpages_edmbundle_nodedirectoryeditform"
                             )
                         );
                         $nodeTree['actionList'][] = array(

@@ -13,6 +13,12 @@ kitpages_edm_add_directory:
     pattern:  /addDirectory
     defaults: { _controller: KitpagesEdmBundle:Node:addDirectory }
 
+kitpages_edm_edit_directory:
+    pattern:  /editDirectory/{nodeId}
+    defaults: { _controller: KitpagesEdmBundle:Node:editDirectory }
+    requirements:
+        nodeId: \d+
+
 kitpages_edm_add_file:
     pattern:  /addFile
     defaults: { _controller: KitpagesEdmBundle:Node:addFile }

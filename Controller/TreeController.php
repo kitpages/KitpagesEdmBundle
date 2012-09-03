@@ -5,6 +5,7 @@ namespace Kitpages\EdmBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Kitpages\EdmBundle\Entity\Node;
+use Kitpages\EdmBundle\Form\NodeDirectoryEditForm;
 use Kitpages\EdmBundle\Form\NodeDirectoryForm;
 use Kitpages\EdmBundle\Form\NodeFileForm;
 use Kitpages\EdmBundle\Form\NodeFileVersionForm;
@@ -48,7 +49,7 @@ class TreeController extends Controller
 
         // build basic form
         $formDirectory   = $this->createForm(new NodeDirectoryForm($hash), $entity);
-
+        $formDirectoryEdit   = $this->createForm(new NodeDirectoryEditForm($hash), $entity);
         $formFile   = $this->createForm(new NodeFileForm($hash), $entity);
 
 
@@ -70,6 +71,7 @@ class TreeController extends Controller
 
         $data = array(
             'nodeChildren' => array($nodeList),
+            'formDirectoryEdit'   => $formDirectoryEdit->createView(),
             'formDirectory'   => $formDirectory->createView(),
             'formFile'   => $formFile->createView(),
             'formFileVersion'   => $formFileVersion->createView(),

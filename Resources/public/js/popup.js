@@ -24,23 +24,27 @@ $(document).ready(function() {
             {
                 $('.kit-edm-upload-progress-indicator').css('width', maxprogress);
                 $('.progress_status').html(txtComplete);
+                $('.kit-edm-upload-progress-cancel').remove();
             }
         });
     }
     //Lorsque vous cliquez sur un lien de la classe poplight et que le href commence par #
     $('a.poplight[href^=#]').click(function() {
-        var kitpagesEdmFieldName = $(this).data('kitpages-edm-field-name');
-        var kitpagesEdmFieldValue = $(this).data('kitpages-edm-field-value');
-        $('#' + kitpagesEdmFieldName).val(kitpagesEdmFieldValue);
-
         var popID = $(this).attr('rel'); //Trouver la pop-up correspondante
         var popURL = $(this).attr('href'); //Retrouver la largeur dans le href
-
         var popWidth = 500; //La première valeur du lien
 
         $('#' + popID).remove();
         var cloneForm = $('.' + popID).clone().prependTo('body');
         $('body > .' + popID).attr('id', popID);
+
+        var kitpagesEdmFieldName = $(this).data('kitpages-edm-field-name');
+        var kitpagesEdmFieldValue = $(this).data('kitpages-edm-field-value');
+        $('#' + kitpagesEdmFieldName).val(kitpagesEdmFieldValue);
+
+        if (!($(this).data('kitpages-edm-action') === "undefined")) {
+            $('#' + popID + ' form').attr('action', $(this).data('kitpages-edm-action'));
+        }
 
         //Faire apparaitre la pop-up et ajouter le bouton de fermeture
         $('#' + popID).fadeIn().css({
