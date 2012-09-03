@@ -65,11 +65,11 @@ class NodeDirectoryEditFormHandler
 
                     $event = new TreeEvent();
                     $event->setNode($entity);
-                    $this->dispatcher->dispatch(KitpagesEdmEvents::afterCreateNodeDirectory, $event);
+                    $this->dispatcher->dispatch(KitpagesEdmEvents::afterEditNodeDirectory, $event);
 
-                    $this->request->getSession()->setFlash('notice', $this->translator->trans('Your directory is created'));
+                    $this->request->getSession()->setFlash('notice', $this->translator->trans('Your directory is modified'));
                 } else {
-                    $this->request->getSession()->setFlash("error", $this->translator->trans("technical error, not uploaded"));
+                    $this->request->getSession()->setFlash("error", $this->translator->trans("technical error"));
                 }
                 return true;
             }
