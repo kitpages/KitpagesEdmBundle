@@ -90,6 +90,8 @@ $(document).ready(function() {
         }
     });
     $('.kitpages_edmbundle_nodefileversionform form :button').live('click', function() {
+        $('a.close, #fade').die("click");
+        $('.kitpages_edmbundle_nodefileform form :button').die("click");
         $('.kit-edm-upload-progress')[0].style.visibility = 'visible';
         intervalId = setInterval(phpUploadStatus, timeInterval);
         setTimeout($(this).parents('form').submit(),100)
