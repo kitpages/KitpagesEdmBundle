@@ -57,7 +57,8 @@
 
 .kit-edm-tree-form-load{
     height:32px;
-    width:32px;
+    width:350px;
+    line-height:32px;
     border:none;
     background-image: url('../img/load.gif');
     background-repeat: no-repeat;
@@ -82,8 +83,10 @@
 .kit-edm-upload-progress
 {
     width:250px;
-    /*padding:1px;*/
     background-color:white;
-    /*border:1px solid black;*/
     height:22px;
+}
+
+.kit-edm-upload-progress-cancel{
+    margin-left:260px;
 }
