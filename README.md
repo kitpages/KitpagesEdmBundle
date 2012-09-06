@@ -70,6 +70,19 @@ Let's see the configuration in config.yml
                 kitpages_file_system_id: kitpagesAmazon
                 tmp_dir: %kernel.root_dir%/data/tmp
 
+    kitpages_file_system:
+        file_system_list:
+            kitsiteTest:
+                local:
+                    directory_public: %kernel.root_dir%/../web
+                    directory_private: %kernel.root_dir%
+                    base_url: %base_url%
+            kitpagesAmazon:
+                local:
+                    directory_public: %kernel.root_dir%/../web
+                    directory_private: %kernel.root_dir%
+                    base_url: %base_url%
+
 
 Usage example
 =============
