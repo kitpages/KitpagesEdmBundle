@@ -12,6 +12,12 @@ Dependencies
 - kitpagesFileSystemBundle
 - KitpagesUtilBundle
 
+add the following entries to the autoload.php in the directory app of your project file:
+    $loader->registerNamespaces(array(
+        // ...
+        'Kitpages'         => __DIR__.'/../vendor',
+    ));
+
 add the following entries to the deps in the root of your project file:
 
     [KitpagesFileSystemBundle]
@@ -19,7 +25,7 @@ add the following entries to the deps in the root of your project file:
         target=Kitpages/FileSystemBundle
     [KitpagesUtilBundle]
         git=https://github.com/kitpages/KitpagesUtilBundle.git
-        target=/bundles/Kitpages/UtilBundle
+        target=Kitpages/UtilBundle
 
 Add the following entries to your autoloader:
         $bundles = array(
