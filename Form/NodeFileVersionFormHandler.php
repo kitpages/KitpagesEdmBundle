@@ -68,7 +68,12 @@ class NodeFileVersionFormHandler
                     $em->flush();
 
                     $treeManager = $this->treeMap->getEdm($node->getTreeId());
-                    $treeManager->uploadFile($node, $form['fileUpload']->getData(), $sendEmail, $versionNote);
+                    try {
+                        $treeManager->uploadFile($node, $form['fileUpload']->getData(), $sendEmail, $versionNote);
+                    } catch (\Exception $exc) {
+                        $this->request->getSession()->setFlash("error", $this->translator->trans("technical error, not uploaded"));
+                        return false;
+                    }
 
                     $this->request->getSession()->setFlash('notice', $this->translator->trans('New version is uploaded'));
 

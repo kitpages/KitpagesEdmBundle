@@ -51,22 +51,12 @@
         </p>
         {{ form_widget(formFileVersion) }}
     </form>
+    <div class="kit-edm-upload-progress" style="visibility:hidden">
+        <div class="kit-edm-upload-progress-indicator"><a class="kit-edm-upload-progress-cancel" href="{{app.request.requestUri}}">{{ "Cancel" | trans }}</a></div>
+        <p class="progress_status">0%</p>
+    </div>
 </div>
 <script>
-    $(document).ready(function() {
-        if(scrollPosition==undefined ) {
-            var scrollPosition = {{kitEdmUserPreferenceTree.scrollTree|default(0)}};
-            $(window).scrollTop(scrollPosition);
-            var timer;
-            $(window).scroll(function () {
-                clearTimeout(timer);
-                timer = setTimeout(
-                        function(){$.ajax({
-                            url: "{{ path('kitpages_edm_userpreference_tree_scroll')}}?scroll="+$(window).scrollTop()
-                        })},
-                        1000
-                );
-            });
-        }
-    });
+    var urlUploadStatus = "{{ path('kitpages_edm_upload_status', {'uploadProgressName': 'upload'})}}";
+    var txtComplete="<div class='kit-edm-tree-form-load'>{{ "Verification of the file" | trans }}</div>";
 </script>

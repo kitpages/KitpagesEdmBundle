@@ -10,12 +10,14 @@ use Symfony\Component\Routing\RouterInterface;
 
 use Kitpages\FileSystemBundle\Service\Adapter\AdapterInterface;
 
+use Kitpages\EdmBundle\Entity\File;
 use Kitpages\EdmBundle\Entity\Node;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Kitpages\EdmBundle\Event\TreeEvent;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Kitpages\EdmBundle\KitpagesEdmEvents;
+use Kitpages\EdmBundle\EdmException;
 
 class TreeManager {
     ////
@@ -146,16 +148,21 @@ class TreeManager {
             // upload first version
             $this->dispatcher->dispatch(KitpagesEdmEvents::onNewFileUpload, $event);
             if (! $event->isDefaultPrevented()) {
-                $file = $this->fileManager->newFile($uploadedFile);
+                try {
+                    $file = $this->fileManager->newFile($uploadedFile);
+                } catch (\Exception $exc) {
+                    $this->deleteNode($node, true);
+                    throw new EdmException("new file Error, node delete.");
+                }
             }
-
-            $node = $event->getNode();
-            $node->setFile($file);
-            $node->setLabel($uploadedFile->getClientOriginalName());
-            $em->persist($node);
-            $em->persist($file);
-            $em->flush();
-
+            if ($file instanceof File) {
+                $node = $event->getNode();
+                $node->setFile($file);
+                $node->setLabel($uploadedFile->getClientOriginalName());
+                $em->persist($node);
+                $em->persist($file);
+                $em->flush();
+            }
             // send after event
             $this->dispatcher->dispatch(KitpagesEdmEvents::afterNewFileUpload, $event);
         } else {
@@ -164,13 +171,13 @@ class TreeManager {
             if (! $event->isDefaultPrevented()) {
                 $file = $this->fileManager->newVersionFile($oldVersionFile, $uploadedFile, $versionNote);
             }
-
-            $node = $event->getNode();
-            $node->setFile($file);
-            $node->setLabel($uploadedFile->getClientOriginalName());
-            $em->persist($node);
-            $em->flush();
-
+            if ($file  instanceof File) {
+                $node = $event->getNode();
+                $node->setFile($file);
+                $node->setLabel($uploadedFile->getClientOriginalName());
+                $em->persist($node);
+                $em->flush();
+            }
             // send after event
             $this->dispatcher->dispatch(KitpagesEdmEvents::afterNewVersionFileUpload, $event);
         }
@@ -519,7 +526,6 @@ class TreeManager {
         return $nodeListRenderer;
     }
 
-
     public function deleteOldFileVersion($node, $recursive)
         {
             $event = new TreeEvent();
@@ -528,7 +534,10 @@ class TreeManager {
             if (!$event->isDefaultPrevented()) {
                 $nodeType = $node->getNodeType();
                 if ($nodeType == Node::NODE_TYPE_FILE) {
-                    $this->fileManager->deleteOldFileVersion($node->getFile());
+                    $nodeFile =  $node->getFile();
+                    if ($nodeFile instanceof File) {
+                        $this->fileManager->deleteOldFileVersion($node->getFile());
+                    }
                 }
                 if ($recursive && $nodeType == Node::NODE_TYPE_DIRECTORY) {
                     $em = $this->doctrine->getEntityManager();
@@ -550,7 +559,10 @@ class TreeManager {
             $nodeType = $node->getNodeType();
             $em = $this->doctrine->getEntityManager();
             if ($nodeType == Node::NODE_TYPE_FILE) {
-                $this->fileManager->deleteFile($node->getFile());
+                $nodeFile =  $node->getFile();
+                if ($nodeFile instanceof File) {
+                    $this->fileManager->deleteFile($node->getFile());
+                }
             }
             if ($recursive && $nodeType == Node::NODE_TYPE_DIRECTORY) {
                 $nodeChildList = $em->getRepository('KitpagesEdmBundle:Node')->children($node, true);
@@ -599,7 +611,10 @@ class TreeManager {
             $em->persist($node);
 
             if ($nodeType == Node::NODE_TYPE_FILE) {
-                $this->fileManager->modifyStatus($node->getFile(), $status);
+                $nodeFile =  $node->getFile();
+                if ($nodeFile instanceof File) {
+                    $this->fileManager->modifyStatus($node->getFile(), $status);
+                }
             }
 
             $em->flush();

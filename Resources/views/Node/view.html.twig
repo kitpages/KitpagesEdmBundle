@@ -63,5 +63,13 @@
         </p>
         {{ form_widget(formFileVersion) }}
     </form>
+    <div class="kit-edm-upload-progress" style="visibility:hidden">
+        <div class="kit-edm-upload-progress-indicator"><a class="kit-edm-upload-progress-cancel" href="{{app.request.requestUri}}">{{ "Cancel" | trans }}</a></div>
+        <p class="progress_status">0%</p>
+    </div>
 </div>
+<script>
+    var urlUploadStatus = "{{ path('kitpages_edm_upload_status', {'uploadProgressName': 'upload'})}}";
+    var txtComplete="<div class='kit-edm-tree-form-load'>{{ "Verification of the file" | trans }}</div>";
+</script>
 {% endblock %}

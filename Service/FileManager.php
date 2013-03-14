@@ -9,6 +9,8 @@ use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Routing\RouterInterface;
 use Kitpages\EdmBundle\Entity\File;
 
+use Kitpages\EdmBundle\EdmException;
+
 use Kitpages\FileSystemBundle\Service\Adapter\AdapterInterface;
 use Kitpages\FileSystemBundle\Model\AdapterFile;
 
@@ -104,20 +106,21 @@ class FileManager {
         $tempFilePath = tempnam($this->tmpDir, $file->getId());
         $uploadedFile->move($this->tmpDir, basename($tempFilePath));
 
-        if (
+        try {
             $this->fileSystem->copyTempToAdapter(
                 $tempFilePath,
                 new AdapterFile($this->getFilePath($file)),
                 $mimeType
-            )
-        ) {
-            $file->setHasUploadFailed(false);
-        }
-        else {
-            $file->setHasUploadFailed(true);
+            );
+        } catch (\Exception $exc) {
+            $em->remove($file);
+            $em->flush();
+            $file = null;
         }
         unlink($tempFilePath);
-        $em->flush();
+        if ($file == null) {
+            throw new EdmException("fileSystem copy temp to adapter Fail.");
+        }
 
         return $file;
     }
@@ -131,40 +134,44 @@ class FileManager {
         $file = $this->createFile($uploadedFile->getClientOriginalName(), $mimeType, $fileInfo);
         $file->setVersion($oldVersionFile->getVersion()+1);
         $file->setVersionNote($versionNote);
-        $file->setPreviousVersion($oldVersionFile);
-        $fileOriginal = $oldVersionFile->getOriginalVersion();
-        if ($fileOriginal instanceof File) {
-            $file->setOriginalVersion($fileOriginal);
-        } else {
-            $file->setOriginalVersion($oldVersionFile);
-        }
-
-        $oldVersionFile->setStatus(File::FILE_STATUS_OLD_VERSION);
-
         $em = $this->doctrine->getEntityManager();
-        $em->persist($oldVersionFile);
         $em->persist($file);
         $em->flush();
 
         $tempFilePath = tempnam($this->tmpDir, $file->getId());
         $uploadedFile->move($this->tmpDir, basename($tempFilePath));
 
-        if (
+        try {
             $this->fileSystem->copyTempToAdapter(
                 $tempFilePath,
                 new AdapterFile($this->getFilePath($file)),
                 $mimeType
-            )
-        ) {
+            );
+
+            $file->setPreviousVersion($oldVersionFile);
+            $fileOriginal = $oldVersionFile->getOriginalVersion();
+            if ($fileOriginal instanceof File) {
+                $file->setOriginalVersion($fileOriginal);
+            } else {
+                $file->setOriginalVersion($oldVersionFile);
+            }
             $file->setHasUploadFailed(false);
-        }
-        else {
-            $file->setHasUploadFailed(true);
+            $oldVersionFile->setStatus(File::FILE_STATUS_OLD_VERSION);
+            $em->persist($file);
+            $em->persist($oldVersionFile);
+            $em->flush();
+            $em->refresh($file);
+        } catch (\Exception $exc) {
+            $em->remove($file);
+            $em->flush();
+            $file = null;
         }
         unlink($tempFilePath);
 
-        $em->flush();
-        $em->refresh($file);
+        if ($file == null) {
+            throw new EdmException("fileSystem copy temp to adapter Fail.");
+        }
+
         if ($this->versionNumberToKeep != 'all') {
             try{
                 $versionOriginal = $em->getRepository('KitpagesEdmBundle:File')->getVersionFile($file, $this->versionNumberToKeep);

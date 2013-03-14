@@ -67,7 +67,12 @@ class NodeFileFormHandler
                     $em->refresh($entity);
 
                     $treeManager = $this->treeMap->getEdm($entity->getTreeId());
-                    $treeManager->uploadFile($entity, $dataFile, $sendEmail);
+                    try {
+                        $treeManager->uploadFile($entity, $dataFile, $sendEmail);
+                    } catch (\Exception $exc) {
+                        $this->request->getSession()->setFlash("error", $this->translator->trans("technical error, not uploaded"));
+                        return false;
+                    }
 
                     $this->request->getSession()->setFlash('notice', $this->translator->trans('Your file is uploaded'));
                 } else {
